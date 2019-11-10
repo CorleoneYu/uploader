@@ -8,9 +8,10 @@ import {
 
 /* component */
 import UploaderViewer from '../uploader-viewer';
+import Home from '../home';
 
 /* antd */
-import { Layout } from "antd";
+import { Layout } from 'antd';
 const { Header, Content } = Layout;
 
 export default class extends Component {
@@ -34,7 +35,8 @@ export default class extends Component {
               >
                 <Switch>
                   <Route path="/upload" component={UploaderViewer} />
-                  <Redirect from="*" to="/upload" />
+                  <Route path="/home" component={Home} />
+                  <Redirect from="*" to="/home" />
                 </Switch>
               </Content>
             </Layout>
