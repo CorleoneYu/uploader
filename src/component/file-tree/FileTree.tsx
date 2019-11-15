@@ -2,26 +2,24 @@ import React, { Component } from "react";
 
 import { Tree } from "antd";
 
-import { FileUpload, Directory } from "../../core";
-import { mockTree } from "../../core/test";
+import FileNode, { mockFileTree } from "../../model/file-node";
 
-type Info = FileUpload | Directory;
 interface IState {
-  infoList: Info[];
+  fileList: FileNode[];
 }
 
 export default class FileTree extends Component<{}, IState> {
   state = {
-    infoList: []
+    fileList: []
   };
 
   componentDidMount() {
-    this.getInfoList();
+    this.getFileList();
   }
 
-  getInfoList() {
+  getFileList() {
     this.setState({
-      infoList: [mockTree()]
+      fileList: [mockFileTree()]
     });
   }
 
@@ -33,21 +31,20 @@ export default class FileTree extends Component<{}, IState> {
     console.log("Trigger Expand");
   };
 
-  renderFile(file: FileUpload) {
-    return <Tree.TreeNode title={file.name} key={file.fileId} isLeaf />;
-  }
-
-  renderDir = (dir: Directory) => {
+  renderNode(file: FileNode) {
     return (
-      <Tree.TreeNode title={dir.name} key={dir.dirId}>
-        {dir.subDirs.map(subDir => this.renderDir(subDir))}
-        {dir.subFiles.map(subFile => this.renderFile(subFile))}
+      <Tree.TreeNode
+        title={file.fileName}
+        key={`${file.fileId}`}
+        isLeaf={file.isFile}
+      >
+        {file.children.map(child => this.renderNode(child))}
       </Tree.TreeNode>
     );
-  };
+  }
 
   render = () => {
-    const { infoList } = this.state;
+    const { fileList } = this.state;
     return (
       <Tree.DirectoryTree
         multiple
@@ -55,15 +52,7 @@ export default class FileTree extends Component<{}, IState> {
         onSelect={this.onSelect}
         onExpand={this.onExpand}
       >
-        {infoList.map((info: Info) => {
-          if (info instanceof FileUpload) {
-            // return <FileNode file={info} key={`file-node-${info.fileId}`} />;
-            return this.renderFile(info);
-          } else if (info instanceof Directory) {
-            // return <DirNode dir={info} key={`dir-node-${info.dirId}`} />;
-            return this.renderDir(info);
-          }
-        })}
+        {fileList.map((node: FileNode) => this.renderNode(node))}
       </Tree.DirectoryTree>
     );
   };

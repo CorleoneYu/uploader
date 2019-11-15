@@ -9,10 +9,11 @@ import {
 /* component */
 import UploaderViewer from '../uploader-viewer';
 import Home from '../home';
+import FileTree from '../file-tree';
 
 /* antd */
 import { Layout } from 'antd';
-const { Header, Content } = Layout;
+const { Header, Content, Sider } = Layout;
 
 export default class extends Component {
   render() {
@@ -23,6 +24,9 @@ export default class extends Component {
             <h1 className="cwhite">易动网盘</h1>
           </Header>
           <Layout style={{ height: "calc(100vh - 64px)" }}>
+            <Sider width={200} style={{ background: '#fff'}}>
+              <FileTree />
+            </Sider>
             <Layout style={{ padding: "24px" }}>
               <Content
                 style={{
@@ -36,7 +40,7 @@ export default class extends Component {
                 <Switch>
                   <Route path="/upload" component={UploaderViewer} />
                   <Route path="/home" component={Home} />
-                  <Redirect from="*" to="/home" />
+                  <Redirect from="*" to="/upload" />
                 </Switch>
               </Content>
             </Layout>
