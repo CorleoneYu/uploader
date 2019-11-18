@@ -1,13 +1,14 @@
 import { FileUpload, Directory } from './index';
+export type FileTree = FileUpload | Directory;
 
-let taskId = 0;
+let taskId = 1;
 
 export class Task {
-  public taskId: number = 0;
-  public root: FileUpload | Directory;
+  public taskId: number;
+  public root: FileUpload | Directory | null = null;
+  public taskLink: FileTree[] = [];
 
-  constructor(root: FileUpload | Directory) {
+  constructor() {
     this.taskId = taskId++;
-    this.root = root;
   }
 }
