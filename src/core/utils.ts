@@ -1,17 +1,6 @@
 import { FileUpload, Directory, Task, Uploader } from "./index";
 
-function getSingleUploaderCreater() {
-  let singleUploader: Uploader | null = null;
-  return function() {
-    if (singleUploader) {
-      return singleUploader;
-    }
-
-    singleUploader = new Uploader();
-    return singleUploader;
-  }
-}
-export const getSingleUploader = getSingleUploaderCreater();
+export const getSingleUploader = _getSingleUploaderCreater();
 
 export function createTask(fileList: File[]) {
   const task = new Task();
@@ -70,4 +59,26 @@ export function createFileNode(file: File, root: any, task: Task) {
 
   (parent as Directory).subFiles.push(fileUpload);
   task.taskLink.push(fileUpload);
+}
+
+export const TIMEOUT = 1000;
+
+export function mockRequest(timeout: number = TIMEOUT) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve('success');
+    }, timeout);
+  })
+}
+
+function _getSingleUploaderCreater() {
+  let singleUploader: Uploader | null = null;
+  return function() {
+    if (singleUploader) {
+      return singleUploader;
+    }
+
+    singleUploader = new Uploader();
+    return singleUploader;
+  }
 }

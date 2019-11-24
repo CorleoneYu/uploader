@@ -1,14 +1,25 @@
 import { Task } from './index';
 
 export class Uploader {
-  public tasks: Task[] = [];
+  public tasks: Map<number, Task> = new Map();
 
   addTask(task: Task) {
-    this.tasks.push(task);
+    this.tasks.set(task.taskId, task);
   }
 
   cancelTask(taskId: number) {
-    const idx = this.tasks.findIndex((task) => task.taskId === taskId);
-    this.tasks.splice(idx, 1);
+    if (!this.tasks.get(taskId)) {
+      return;
+    }
+
+    this.tasks.delete(taskId);
+  }
+
+  upload(taskId: number) {
+    if (!this.tasks.get(taskId)) {
+      return;
+    }
+
+    this.tasks.get(taskId)!.upload();
   }
 }
