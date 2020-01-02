@@ -28,7 +28,7 @@ export class Task {
     console.log('task upload');
     this.taskStatus = 'uploading';
 
-    while(this.taskStatus === 'uploading' && !this.isFinish()) {
+    while (this.taskStatus === 'uploading' && !this.isFinish()) {
       const taskItem = this.taskLink[this.currentIdx];
       await taskItem.upload();
 
@@ -45,7 +45,7 @@ export class Task {
   isFinish() {
     return this.currentIdx >= this.taskLink.length;
   }
-  
+
   isPaused() {
     return this.taskStatus === 'paused';
   }

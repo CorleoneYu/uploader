@@ -1,9 +1,8 @@
-import { Directory, Chunk, Task, mockRequest, } from "./index";
+import { Directory, Chunk, Task, mockRequest } from './index';
 
 export type FileStatus = 'init' | 'prepared' | 'sent' | 'uploaded';
 
 let fileId = 1;
-
 
 export class FileUpload {
   public fileId: string;
@@ -25,7 +24,7 @@ export class FileUpload {
     parentDir,
     task,
   }: {
-    file: File,
+    file: File;
     parentDir: Directory | null;
     task: Task;
   }) {
@@ -37,7 +36,7 @@ export class FileUpload {
     this.type = type;
 
     this.parentDir = parentDir;
-    
+
     this.task = task;
     this.fileStatus = 'init';
   }
@@ -48,11 +47,11 @@ export class FileUpload {
     if (this.fileStatus === 'init') {
       await this.prepare();
     }
-    
+
     if (this.fileStatus === 'prepared') {
       await this.sendChunks();
     }
-    
+
     if (this.fileStatus === 'sent') {
       await this.finish();
     }
@@ -62,7 +61,7 @@ export class FileUpload {
 
   async prepare() {
     console.log('file prepare', this.name);
-    
+
     try {
       await mockRequest();
       // 根据数据设置chunk
@@ -82,7 +81,6 @@ export class FileUpload {
     } catch (e) {
       console.log('file sendChunks err', e);
     }
-    
   }
 
   async finish() {

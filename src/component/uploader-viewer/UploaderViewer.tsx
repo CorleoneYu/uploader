@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import { createTask, getSingleUploader, Uploader, Task } from "../../core";
+import { createTask, getSingleUploader, Uploader, Task } from '../../core';
 
 /* antd */
-import { Button } from "antd";
+import { Button } from 'antd';
 
 interface IState {
   tasks: Task[];
@@ -13,11 +13,11 @@ export default class UploaderViewer extends Component<{}, IState> {
   inputDom: HTMLInputElement | null = null;
   uploader: Uploader = getSingleUploader();
   state = {
-    tasks: []
+    tasks: [],
   };
 
   onChangeFiles = (e: any) => {
-    console.log("change files", e.target.value);
+    console.log('change files', e.target.value);
   };
 
   getInputBox = (element: HTMLDivElement) => {
@@ -39,11 +39,11 @@ export default class UploaderViewer extends Component<{}, IState> {
       return this.inputDom;
     }
 
-    const inputDom = document.createElement("input");
-    inputDom.setAttribute("type", "file");
-    inputDom.setAttribute("webkitdirectory", "webkitdirectory");
-    inputDom.style.display = "none";
-    inputDom.addEventListener("change", this.handleFileChange);
+    const inputDom = document.createElement('input');
+    inputDom.setAttribute('type', 'file');
+    inputDom.setAttribute('webkitdirectory', 'webkitdirectory');
+    inputDom.style.display = 'none';
+    inputDom.addEventListener('change', this.handleFileChange);
 
     this.inputDom = inputDom;
     return inputDom;
@@ -55,7 +55,7 @@ export default class UploaderViewer extends Component<{}, IState> {
     this.uploader.upload(task.taskId);
 
     this.setState({
-      tasks: [...this.state.tasks, task]
+      tasks: [...this.state.tasks, task],
     });
   };
 
@@ -83,7 +83,13 @@ export default class UploaderViewer extends Component<{}, IState> {
               {task.taskLink.map((node, idx) => {
                 return <div key={`node-${idx}`}>{node.name}</div>;
               })}
-              <Button onClick={() => { this.togglePause(task) }}>暂停/恢复</Button>
+              <Button
+                onClick={() => {
+                  this.togglePause(task);
+                }}
+              >
+                暂停/恢复
+              </Button>
             </div>
           );
         })}

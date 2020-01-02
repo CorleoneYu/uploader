@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import { Tree } from "antd";
+import { Tree } from 'antd';
 
-import FileNode, { mockFileTree } from "../../model/file-node";
+import FileNode, { mockFileTree } from '../../model/file-node';
 
 interface IState {
   fileList: FileNode[];
@@ -10,7 +10,7 @@ interface IState {
 
 export default class FileTree extends Component<{}, IState> {
   state = {
-    fileList: []
+    fileList: [],
   };
 
   componentDidMount() {
@@ -19,16 +19,16 @@ export default class FileTree extends Component<{}, IState> {
 
   getFileList() {
     this.setState({
-      fileList: [mockFileTree()]
+      fileList: [mockFileTree()],
     });
   }
 
   onSelect = (keys: any, event: any) => {
-    console.log("Trigger Select", keys, event);
+    console.log('Trigger Select', keys, event);
   };
 
   onExpand = () => {
-    console.log("Trigger Expand");
+    console.log('Trigger Expand');
   };
 
   renderNode(file: FileNode) {

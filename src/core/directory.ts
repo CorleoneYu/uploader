@@ -12,10 +12,14 @@ export class Directory {
   public subDirs: Directory[] = [];
   public dirStatus: DirStatus = 'init';
 
-  constructor({ task, parentDir, name }: {
-    task: Task,
-    parentDir: Directory | null,
-    name: string
+  constructor({
+    task,
+    parentDir,
+    name,
+  }: {
+    task: Task;
+    parentDir: Directory | null;
+    name: string;
   }) {
     this.dirId = `dir-${dirId++}`;
     this.task = task;
