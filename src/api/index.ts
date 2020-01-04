@@ -59,18 +59,14 @@ myAxios.interceptors.response.use(
   }
 );
 
-const get = (url: string, params, config = {}) =>
-  myAxios.get(url, { ...config, params });
-const deletes = (url: string, params, config = {}) =>
-  myAxios.delete(url, { ...config, params });
-const post = (url: string, params, config = {}) =>
-  myAxios.post(url, params, config);
-const put = (url: string, params, config = {}) =>
-  myAxios.put(url, params, config);
-
-export default {
-  get,
-  post,
-  deletes,
-  put,
+type Params = {
+  [key: string]: string;
 };
+export const get = (url: string, params: Params, config = {}) =>
+  myAxios.get(url, { ...config, params });
+export const deletes = (url: string, params: Params, config = {}) =>
+  myAxios.delete(url, { ...config, params });
+export const post = (url: string, params: Params, config = {}) =>
+  myAxios.post(url, params, config);
+export const put = (url: string, params: Params, config = {}) =>
+  myAxios.put(url, params, config);
