@@ -6,11 +6,18 @@ import UploaderViewer from '../uploader-viewer';
 import Home from '../home';
 import FileTree from '../file-tree';
 
+/** utils */
+import { history } from '../../utils';
+
 /* antd */
 import { Layout } from 'antd';
 const { Header, Content, Sider } = Layout;
 
 export default class extends Component {
+  componentDidMount() {
+    console.log('history', history);
+  }
+
   render() {
     return (
       <Layout>

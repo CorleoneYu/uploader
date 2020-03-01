@@ -1,12 +1,16 @@
 import React from 'react';
+// import stores from './store';
+// import { Provider } from "mobx-react";
 import Layout from './component/layout';
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <Layout />
-    </div>
-  );
+class App extends React.Component {
+  render() {
+    return (
+      <div className="app">
+        <Layout />
+      </div>
+    );
+  }
 }
 
 export default App;
