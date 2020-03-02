@@ -1,28 +1,12 @@
 import React, { Component } from 'react';
-
 import { Tree } from 'antd';
+import IFileNode from '../../utils/file-node'
 
-import FileNode, { mockFileTree } from '../../model/file-node';
-
-interface IState {
-  fileList: FileNode[];
+interface IProps {
+  root: IFileNode;
 }
 
-export default class FileTree extends Component<{}, IState> {
-  state = {
-    fileList: [],
-  };
-
-  componentDidMount() {
-    this.getFileList();
-  }
-
-  getFileList() {
-    this.setState({
-      fileList: [mockFileTree()],
-    });
-  }
-
+export default class FileTree extends Component<IProps> {
   onSelect = (keys: any, event: any) => {
     console.log('Trigger Select', keys, event);
   };
@@ -31,11 +15,11 @@ export default class FileTree extends Component<{}, IState> {
     console.log('Trigger Expand');
   };
 
-  renderNode(file: FileNode) {
+  renderNode(file: IFileNode) {
     return (
       <Tree.TreeNode
         title={file.fileName}
-        key={`${file.fileId}`}
+        key={`${file.fileId}-${file.fileName}`}
         isLeaf={file.isFile}
       >
         {file.children.map(child => this.renderNode(child))}
@@ -44,7 +28,7 @@ export default class FileTree extends Component<{}, IState> {
   }
 
   render = () => {
-    const { fileList } = this.state;
+    const { root } = this.props;
     return (
       <Tree.DirectoryTree
         multiple
@@ -52,7 +36,7 @@ export default class FileTree extends Component<{}, IState> {
         onSelect={this.onSelect}
         onExpand={this.onExpand}
       >
-        {fileList.map((node: FileNode) => this.renderNode(node))}
+        {this.renderNode(root)}
       </Tree.DirectoryTree>
     );
   };

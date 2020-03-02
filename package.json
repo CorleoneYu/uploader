@@ -14,8 +14,6 @@
     "babel-plugin-import": "^1.12.2",
     "customize-cra": "^0.8.0",
     "history": "^4.10.1",
-    "mobx": "^5.15.4",
-    "mobx-react": "^6.1.8",
     "react": "^16.11.0",
     "react-app-rewired": "^2.1.4",
     "react-dom": "^16.11.0",

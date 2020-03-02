@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import { createTask, getSingleUploader, Uploader, Task } from '../../core';
 
 /* antd */

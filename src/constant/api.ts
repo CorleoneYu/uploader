@@ -5,6 +5,18 @@ export const apiUrls = {
   user: {
     signUp: '/signUp',
     signIn: '/signIn',
+  },
+
+  file: {
+    getFileTree: '/fileTree',
+    prepare: '/prepare',
+    upload: 'upload',
+    finish: '/finish',
+    createFolder: '/createFolder',
+    delete: '/delete',
+    remove: '/removeFile',
+    copy: '/copyFile',
+    share: '/share',
   }
 };
 

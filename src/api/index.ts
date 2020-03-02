@@ -82,7 +82,7 @@ myAxios.interceptors.response.use(
 );
 
 type Params = {
-  [key: string]: string;
+  [key: string]: any;
 };
 export const get = (url: string, params: Params, config = {}) =>
   myAxios.get(url, { ...config, params });
