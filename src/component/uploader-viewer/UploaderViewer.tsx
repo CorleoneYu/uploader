@@ -15,10 +15,6 @@ export default class UploaderViewer extends Component<{}, IState> {
     tasks: [],
   };
 
-  onChangeFiles = (e: any) => {
-    console.log('change files', e.target.value);
-  };
-
   getInputBox = (element: HTMLDivElement) => {
     this.inputBox = element;
   };

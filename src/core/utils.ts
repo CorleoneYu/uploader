@@ -23,6 +23,7 @@ export function createFileTree(fileList: File[], task: Task) {
 
 export function createFileNode(file: File, root: any, task: Task) {
   const pathAry = (file as any).webkitRelativePath.split('/');
+  console.log('pathAry: ', pathAry);
   pathAry.pop();
   const pathLen = pathAry.length;
 

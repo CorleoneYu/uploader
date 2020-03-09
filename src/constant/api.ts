@@ -13,8 +13,8 @@ export const apiUrls = {
     upload: 'upload',
     finish: '/finish',
     createFolder: '/createFolder',
-    delete: '/delete',
-    remove: '/removeFile',
+    delete: '/deleteFile', // 删除文件(夹)
+    remove: '/removeFile', // 移动文件(夹)
     copy: '/copyFile',
     share: '/share',
   }

@@ -1,43 +1,75 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { Tree } from 'antd';
-import IFileNode from '../../utils/file-node'
+import useFileTreeModel from '../../model/fileTree';
+import useFileNode from '../../model/fileNode';
+import useCurPath from '../../model/curPath';
+import IFileNode from '../../utils/fileNode';
 
-interface IProps {
-  root: IFileNode;
+const previewFile = (fileNode: IFileNode) => {
+  if (useFileNode.data) {
+    useFileNode.data.previewFile(fileNode);
+  }
 }
 
-export default class FileTree extends Component<IProps> {
-  onSelect = (keys: any, event: any) => {
-    console.log('Trigger Select', keys, event);
+const setCurPath = (path: string) => {
+  if (useCurPath.data) {
+    useCurPath.data.setCurPath(path);
+  }
+}
+
+const setFileNode = (fileNode: IFileNode) => {
+  if (useFileNode.data) {
+    useFileNode.data.setFileNode(fileNode);
+  }
+}
+
+const { DirectoryTree } = Tree;
+
+const FileTree = () => {
+  const fileTreeModel = useFileTreeModel();
+
+  const init = async () => {
+    const root = await fileTreeModel.fetchFileTree();
+    setCurPath(root.fileName);
+    setFileNode(root);
+  }
+
+  useEffect(() => {
+    init();
+  }, []);
+
+  const onSelect = (keys: any, event: any) => {
+    const [ path ] = keys;
+    const node = event.node as IFileNode;
+
+    if (node.isFile) {
+      previewFile(node);
+      return;
+    }
+
+    setCurPath(path);
+    setFileNode(node);
   };
 
-  onExpand = () => {
+  const onExpand = () => {
     console.log('Trigger Expand');
   };
 
-  renderNode(file: IFileNode) {
+  if (!fileTreeModel.fileTree) {
     return (
-      <Tree.TreeNode
-        title={file.fileName}
-        key={`${file.fileId}-${file.fileName}`}
-        isLeaf={file.isFile}
-      >
-        {file.children.map(child => this.renderNode(child))}
-      </Tree.TreeNode>
+      <div>loading</div>
     );
   }
 
-  render = () => {
-    const { root } = this.props;
-    return (
-      <Tree.DirectoryTree
-        multiple
-        defaultExpandAll
-        onSelect={this.onSelect}
-        onExpand={this.onExpand}
-      >
-        {this.renderNode(root)}
-      </Tree.DirectoryTree>
-    );
-  };
+  return (
+    <DirectoryTree
+      defaultExpandAll
+      onSelect={onSelect}
+      onExpand={onExpand}
+      treeData={[fileTreeModel.fileTree]}
+      expandAction="doubleClick"
+    />
+  )
 }
+
+export default FileTree;
