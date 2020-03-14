@@ -13,7 +13,7 @@ export const LoginPage = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 20px;
-    width: 334px;
+    width: 360px;
     border: 1px solid #aaa;
     border-radius: 8px;
     background: white;

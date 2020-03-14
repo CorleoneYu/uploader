@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table, Button, Modal, message } from 'antd';
 import useFileNodeModel from '../../model/fileNode';
+import useFileTreeModel from '../../model/fileTree';
 import IFileNode from '../../utils/fileNode';
 import Column from 'antd/lib/table/Column';
 
@@ -8,25 +9,26 @@ const FolderTable = () => {
   const fileNodeModel = useFileNodeModel();
 
   const handleDelete = (fileNode: IFileNode) => {
-    Modal.warning({
+    Modal.confirm({
       title: `是否删除该项: ${fileNode.fileName} ?`,
       content: '删除该文件后不可找回!',
       okText: '确认',
       okType: 'danger',
       onOk: async () => {
         try {
-          await fileNodeModel.deleteFile(fileNode);
+          await useFileTreeModel.data!.deleteFile(fileNode);
           message.success('删除成功');
         } catch (err) {
           console.error('err', err);
         }
       },
       cancelText: '取消',
+      onCancel: () => {}
     });
   };
 
   const handlePreview = (fileNode: IFileNode) => {
-    fileNodeModel.previewFile(fileNode);
+    useFileTreeModel.data!.previewFile(fileNode);
   };
 
   const renderAction = (fileNode: IFileNode) => {

@@ -1,6 +1,6 @@
 import { post } from './index';
 import { apiUrls } from '../constant/index';
-export function signUp(account: string, password: string, userName: string) {
+export function signUpApi(account: string, password: string, userName: string) {
   return post(apiUrls.user.signUp, {
     account,
     password,
@@ -8,7 +8,7 @@ export function signUp(account: string, password: string, userName: string) {
   });
 }
 
-export function signIn(account: string, password: string) {
+export function signInApi(account: string, password: string) {
   return post(apiUrls.user.signIn, {
     account,
     password,

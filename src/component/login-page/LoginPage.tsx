@@ -1,145 +1,96 @@
-import React from 'react';
-// import { Form, Icon, Input, Button } from 'antd';
-// import { FormComponentProps } from 'antd/lib/form';
-// import { LoginPage } from './style';
-// import { loginService } from '../../utils/login';
+import React, { useCallback, useState } from 'react';
+import { Form, Input, Button } from 'antd';
+import useUserInfoModel from '../../model/userInfo';
 
-// /** utils */
-// import { history } from '../../utils';
+import { LoginPage } from './style';
 
-// interface ISignIn {
-//   account: string;
-//   password: string;
-// }
-
-// interface ISignUp extends ISignIn {
-//   username: string;
-// }
-
-// interface ILoginFormProps extends FormComponentProps {}
-// interface ILoginFormState {
-//   isLogin: boolean;
-// }
-// class LoginForm extends Component<ILoginFormProps, ILoginFormState> {
-//   state = {
-//     isLogin: true,
-//   };
-
-//   toggleLogin = () => {
-//     const { isLogin } = this.state;
-//     this.setState({
-//       isLogin: !isLogin,
-//     });
-//   };
-
-//   handleSignIn = async ({ account, password }: ISignIn) => {
-//     const { usedCapacity, storageCapacity, userName } = await loginService.signIn(
-//       account,
-//       password
-//     );
-//     history.replace({
-//       pathname: '/main',
-//       state: {
-//         usedCapacity,
-//         storageCapacity,
-//         userName,
-//       },
-//     });
-//   };
-
-//   handleSignUp = async ({ account, password, username }: ISignUp) => {
-//     const { usedCapacity, storageCapacity, userName } = await loginService.signUp(
-//       account,
-//       password,
-//       username
-//     );
-//     history.replace({
-//       pathname: '/main',
-//       state: {
-//         usedCapacity,
-//         storageCapacity,
-//         userName,
-//       },
-//     });
-//   };
-
-//   handleSubmit = (e: React.FormEvent) => {
-//     e.preventDefault();
-//     const { isLogin } = this.state;
-//     this.props.form.validateFields((err, values) => {
-//       console.log('validateFields', err, values);
-
-//       if (err) {
-//         return;
-//       }
-
-//       if (isLogin) {
-//         this.handleSignIn(values as ISignIn);
-//         return;
-//       }
-
-//       this.handleSignUp(values as ISignUp);
-//       return;
-//     });
-//   };
-
-//   render() {
-//     const { getFieldDecorator } = this.props.form;
-//     const { isLogin } = this.state;
-//     return (
-//       <LoginPage>
-//         <Form className="login-form" onSubmit={this.handleSubmit}>
-//           <h2>{isLogin ? '登录' : '注册'}</h2>
-//           <Form.Item>
-//             {getFieldDecorator('account', {
-//               rules: [{ required: true, message: 'Please input your account!' }],
-//             })(
-//               <Input
-//                 prefix={<Icon type="user" style={{ color: 'rgba(0, 0, 0, .25)' }} />}
-//                 placeholder="account"
-//               />
-//             )}
-//           </Form.Item>
-//           {!isLogin && (
-//             <Form.Item>
-//               {getFieldDecorator('username', {
-//                 rules: [{ required: true, message: 'Please input your username!' }],
-//               })(
-//                 <Input
-//                   prefix={<Icon type="user" style={{ color: 'rgba(0, 0, 0, .25)' }} />}
-//                   placeholder="Username"
-//                 />
-//               )}
-//             </Form.Item>
-//           )}
-//           <Form.Item>
-//             {getFieldDecorator('password', {
-//               rules: [{ required: true, message: 'Please input your Password!' }],
-//             })(
-//               <Input
-//                 prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
-//                 type="password"
-//                 placeholder="Password"
-//               />
-//             )}
-//           </Form.Item>
-//           <Button type="primary" className="login-form-button" htmlType="submit">
-//             {isLogin ? 'Login' : 'Register'}
-//           </Button>
-//           <Button onClick={this.toggleLogin} type="link">
-//             {isLogin ? 'register now!' : 'Login'}
-//           </Button>
-//         </Form>
-//       </LoginPage>
-//     );
-//   }
-// }
-
-// const WrappedLoginForm = Form.create({ name: 'login_form' })(LoginForm);
-
-// export default WrappedLoginForm;
-
-const LoginPage = () => {
-  return (<div>LoginPage</div>)
+interface IFormData {
+  username: string;
+  account: string;
+  password: string;
 }
-export default LoginPage;
+
+const defaultFormData: IFormData = {
+  username: '',
+  account: '',
+  password: '',
+};
+
+const layout = {
+  labelCol: { span: 7 },
+  wrapperCol: { span: 16 },
+};
+
+const tailLayout = {
+  wrapperCol: { offset: 7, span: 16 },
+};
+
+export default function LoginForm() {
+  const [isLogin, setIsLogin] = useState(true);
+  const { signUp, signIn } = useUserInfoModel();
+
+  const onFinish = useCallback((values: any) => {
+    const { account, username, password } = values;
+    if (isLogin) {
+      signIn(account, password);
+    } else {
+      signUp(account, password, username);
+    }
+  }, [signIn, signUp, isLogin]);
+
+  const onFinishFailed = useCallback((error: any) => {
+    console.log('error: ', error);
+  }, []);
+
+  const toggleLogin = useCallback(() => {
+    setIsLogin((isLogin) => !isLogin);
+  }, []);
+
+  return (
+    <LoginPage>
+      <Form
+        className="login-form"
+        {...layout}
+        name="basic"
+        initialValues={defaultFormData}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+      >
+        <h2>{isLogin ? '登录' : '注册'}</h2>
+        <Form.Item
+          label="Account"
+          name="account"
+          rules={[{ required: true, message: 'Please input your account!' }]}
+        >
+          <Input placeholder="account" />
+        </Form.Item>
+        {!isLogin && (
+          <Form.Item
+            label="Username"
+            name="username"
+            rules={[{ required: true, message: 'Please input your username!' }]}
+          >
+            <Input placeholder="Username" />
+          </Form.Item>
+        )}
+
+        <Form.Item
+          label="Password"
+          name="password"
+          rules={[{ required: true, message: 'Please input your password!' }]}
+        >
+          <Input.Password placeholder="Password" />
+        </Form.Item>
+
+        <Form.Item {...tailLayout}>
+          <Button type="primary" className="login-form-button" htmlType="submit">
+            {isLogin ? 'Login' : 'Register'}
+          </Button>
+          <Button onClick={toggleLogin} type="link">
+            {isLogin ? 'register now!' : 'Login'}
+          </Button>
+        </Form.Item>
+      </Form>
+    </LoginPage>
+  );
+}

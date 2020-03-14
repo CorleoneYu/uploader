@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { message } from 'antd';
 import { HttpCode } from '../constant/index';
-import { loginService } from '../utils/login';
+import { getToken } from '../model/userInfo';
 
 const myAxios = axios.create({
   timeout: 10000,
@@ -14,7 +14,7 @@ myAxios.defaults.transformRequest = (data) => {
 
 myAxios.interceptors.request.use(
   (config) => {
-    const token = loginService.getToken();
+    const token = getToken();
     if (token) {
       config.headers['Authorization'] = token;
     }  

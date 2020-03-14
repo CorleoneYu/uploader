@@ -5,12 +5,6 @@ import useFileNode from '../../model/fileNode';
 import useCurPath from '../../model/curPath';
 import IFileNode from '../../utils/fileNode';
 
-const previewFile = (fileNode: IFileNode) => {
-  if (useFileNode.data) {
-    useFileNode.data.previewFile(fileNode);
-  }
-}
-
 const setCurPath = (path: string) => {
   if (useCurPath.data) {
     useCurPath.data.setCurPath(path);
@@ -26,17 +20,17 @@ const setFileNode = (fileNode: IFileNode) => {
 const { DirectoryTree } = Tree;
 
 const FileTree = () => {
-  const fileTreeModel = useFileTreeModel();
-
-  const init = async () => {
-    const root = await fileTreeModel.fetchFileTree();
-    setCurPath(root.fileName);
-    setFileNode(root);
-  }
+  const { fileTree, fetchFileTree, previewFile } = useFileTreeModel();
 
   useEffect(() => {
+    const init = async () => {
+      const root = await fetchFileTree();
+      setCurPath(root.fileName);
+      setFileNode(root);
+    }
+    
     init();
-  }, []);
+  }, [fetchFileTree]);
 
   const onSelect = (keys: any, event: any) => {
     const [ path ] = keys;
@@ -46,7 +40,6 @@ const FileTree = () => {
       previewFile(node);
       return;
     }
-
     setCurPath(path);
     setFileNode(node);
   };
@@ -55,7 +48,7 @@ const FileTree = () => {
     console.log('Trigger Expand');
   };
 
-  if (!fileTreeModel.fileTree) {
+  if (!fileTree) {
     return (
       <div>loading</div>
     );
@@ -66,7 +59,7 @@ const FileTree = () => {
       defaultExpandAll
       onSelect={onSelect}
       onExpand={onExpand}
-      treeData={[fileTreeModel.fileTree]}
+      treeData={[fileTree]}
       expandAction="doubleClick"
     />
   )
