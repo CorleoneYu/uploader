@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react';
 import { Avatar, Menu, Dropdown } from 'antd';
 import { HeaderBox, AvatarBox } from './style';
-import useUserInfoModel from '../../model/userInfo';
 
 import { layout } from '../../model/userInfo';
 
@@ -10,8 +9,6 @@ enum MENU_KEY {
   LAYOUT = 'layout',
 }
 const AvatarMenu = () => {
-  const { userInfo } = useUserInfoModel();
-  console.log('userInfo: ', userInfo);
   const handleClick = useCallback((e: any) => {
     const { key } = e;
     switch (key) {

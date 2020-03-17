@@ -88,5 +88,10 @@ export function formatSize(bytes: number) {
   if (bytes.toString().length > bytes.toFixed(2).toString().length) {
     str = bytes.toFixed(2);
   }
+
+  if (!str) {
+    return '空';
+  }
+
   return str + ' ' + symbols[i];
 }

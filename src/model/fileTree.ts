@@ -1,7 +1,11 @@
 import { useState, useCallback } from 'react';
 import { createModel } from 'hox';
-import { getFileTreeApi, deleteFileApi } from '../api/file';
+import useFileNode from './fileNode';
+import useCurPath from './curPath';
+import { getFileTreeApi, deleteFileApi, createFolderApi } from '../api/file';
 import IFileNode, { formatFileNode } from '../utils/fileNode';
+import { history } from '../utils';
+
 export function useFileTree() {
   const [fileTree, setFileTree] = useState<IFileNode | null>(null);
 
@@ -10,24 +14,39 @@ export function useFileTree() {
     console.log('deleteFile', data);
   }, []);
   
+  const previewFolder = useCallback((path: string, fileNode: IFileNode) => {
+    useCurPath.data!.setCurPath(path);
+    useFileNode.data!.setFileNode(fileNode);
+    history.replace('/main/home');
+  }, []);
 
   const previewFile = useCallback((fileNode: IFileNode) => {
-    console.log('handlePreview', fileNode);
+    history.replace('/main/preview')
   }, []);
 
   const fetchFileTree = useCallback(async () => {
     const data = await getFileTreeApi();
     const root = formatFileNode(data.data);
-    console.log('fetchFileTree', root);
+
     setFileTree(root);
+    useCurPath.data!.setCurPath(root.fileName);
+    useFileNode.data!.setFileNode(root);
+
     return root;
   }, []); 
+
+  const createFolder = useCallback(async (folderName: string, path: string) => {
+    const data = await createFolderApi(folderName, path);
+    console.log('data: ', data);
+  }, []);
 
   return {
     fileTree,
     fetchFileTree,
     deleteFile,
     previewFile,
+    previewFolder,
+    createFolder,
   };
 }
 
