@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { message } from 'antd';
-import { HttpCode } from '../constant/index';
+import { HttpCode } from '../constant/api';
 import { getToken } from '../model/userInfo';
 
 const myAxios = axios.create({
@@ -17,13 +17,13 @@ myAxios.interceptors.request.use(
     const token = getToken();
     if (token) {
       config.headers['Authorization'] = token;
-    }  
+    }
     return config;
   },
   (err) => {
-    Promise.reject(err)
+    Promise.reject(err);
   }
-)
+);
 
 myAxios.interceptors.response.use(
   (response) => {

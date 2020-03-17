@@ -1,6 +1,25 @@
-export * from './uploader';
-export * from './task';
-export * from './file';
-export * from './directory';
-export * from './chunk';
-export * from './utils';
+import Uploader from './uploader';
+import Task from './task';
+import FileUpload from './file';
+import Directory from './directory';
+import Chunk from './chunk';
+import {
+  getSingleUploader,
+  createTask,
+  createFileTree,
+  createFileNode,
+  mockRequest,
+} from './utils';
+
+export {
+  Uploader,
+  Task,
+  FileUpload,
+  Directory,
+  Chunk,
+  getSingleUploader,
+  createTask,
+  createFileTree,
+  createFileNode,
+  mockRequest,
+};

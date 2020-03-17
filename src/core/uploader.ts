@@ -1,6 +1,6 @@
 import { Task } from './index';
 
-export class Uploader {
+export default class Uploader {
   public tasks: Map<number, Task> = new Map();
 
   addTask(task: Task) {

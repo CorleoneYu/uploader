@@ -1,4 +1,4 @@
-import { FileUpload, Directory, Task, Uploader } from "./index";
+import { FileUpload, Directory, Task, Uploader } from './index';
 
 export const getSingleUploader = _getSingleUploaderCreater();
 
@@ -12,8 +12,8 @@ export function createTask(fileList: File[]) {
 export function createFileTree(fileList: File[], task: Task) {
   const root = {
     subDirs: [],
-  }
-  for(let file of fileList) {
+  };
+  for (let file of fileList) {
     createFileNode(file, root, task);
   }
 
@@ -69,7 +69,7 @@ export function mockRequest(timeout: number = TIMEOUT) {
     setTimeout(() => {
       resolve('success');
     }, timeout);
-  })
+  });
 }
 
 function _getSingleUploaderCreater() {
@@ -81,5 +81,5 @@ function _getSingleUploaderCreater() {
 
     singleUploader = new Uploader();
     return singleUploader;
-  }
+  };
 }

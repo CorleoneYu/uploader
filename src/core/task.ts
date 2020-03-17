@@ -3,7 +3,7 @@ export type FileTree = FileUpload | Directory;
 export type TaskStatus = 'paused' | 'uploading' | 'success';
 let taskId = 1;
 
-export class Task {
+export default class Task {
   public taskId: number;
   public root: FileUpload | Directory | null = null;
   public taskLink: FileTree[] = [];

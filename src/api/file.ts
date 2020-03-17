@@ -1,5 +1,5 @@
 import { post, get } from './index';
-import { apiUrls } from '../constant';
+import { apiUrls } from '../constant/api';
 
 export function getFileTreeApi() {
   return get(apiUrls.file.getFileTree, {});
@@ -14,12 +14,16 @@ export function prepareApi(fileName: string, fileSize: number, filePath: string)
 }
 
 export function uploadApi(uploadId: number, chunkIndex: number) {
-  return post(apiUrls.file.upload, {
-    chunkIndex,
-    uploadId,
-  }, {
-    'Content-Type': 'application/octet-stream	'
-  });
+  return post(
+    apiUrls.file.upload,
+    {
+      chunkIndex,
+      uploadId,
+    },
+    {
+      'Content-Type': 'application/octet-stream	',
+    }
+  );
 }
 
 export function finishApi(uploadId: number) {
@@ -32,12 +36,12 @@ export function createFolderApi(folderName: string, path: string) {
   return post(apiUrls.file.createFolder, {
     folderName,
     path,
-  })
+  });
 }
 
 export function deleteFileApi(fileName: string, path: string) {
   return post(apiUrls.file.delete, {
     fileName,
     path,
-  })
+  });
 }

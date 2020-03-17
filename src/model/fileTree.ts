@@ -4,7 +4,7 @@ import useFileNode from './fileNode';
 import useCurPath from './curPath';
 import { getFileTreeApi, deleteFileApi, createFolderApi } from '../api/file';
 import IFileNode, { formatFileNode } from '../utils/fileNode';
-import { history } from '../utils';
+import { history } from '../utils/history';
 
 export function useFileTree() {
   const [fileTree, setFileTree] = useState<IFileNode | null>(null);
@@ -13,7 +13,7 @@ export function useFileTree() {
     const data = await deleteFileApi(fileNode.fileName, fileNode.path);
     console.log('deleteFile', data);
   }, []);
-  
+
   const previewFolder = useCallback((path: string, fileNode: IFileNode) => {
     useCurPath.data!.setCurPath(path);
     useFileNode.data!.setFileNode(fileNode);
@@ -21,7 +21,7 @@ export function useFileTree() {
   }, []);
 
   const previewFile = useCallback((fileNode: IFileNode) => {
-    history.replace('/main/preview')
+    history.replace('/main/preview');
   }, []);
 
   const fetchFileTree = useCallback(async () => {
@@ -33,7 +33,7 @@ export function useFileTree() {
     useFileNode.data!.setFileNode(root);
 
     return root;
-  }, []); 
+  }, []);
 
   const createFolder = useCallback(async (folderName: string, path: string) => {
     const data = await createFolderApi(folderName, path);

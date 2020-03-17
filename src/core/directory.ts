@@ -3,7 +3,7 @@ import { FileUpload, Task, mockRequest } from './index';
 export type DirStatus = 'init' | 'uploaded';
 
 let dirId = 1;
-export class Directory {
+export default class Directory {
   public dirId: string;
   public name: string = '';
   public parentDir: Directory | null = null;

@@ -4,7 +4,7 @@ export type FileStatus = 'init' | 'prepared' | 'sent' | 'uploaded';
 
 let fileId = 1;
 
-export class FileUpload {
+export default class FileUpload {
   public fileId: string;
   public file: File;
   public size: number;
@@ -19,15 +19,7 @@ export class FileUpload {
   // todo: 状态机
   public fileStatus: FileStatus = 'init';
 
-  constructor({
-    file,
-    parentDir,
-    task,
-  }: {
-    file: File;
-    parentDir: Directory | null;
-    task: Task;
-  }) {
+  constructor({ file, parentDir, task }: { file: File; parentDir: Directory | null; task: Task }) {
     this.fileId = `file-${fileId++}`;
     const { size, type, name } = file;
     this.file = file;

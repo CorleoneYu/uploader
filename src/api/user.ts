@@ -1,5 +1,5 @@
 import { post } from './index';
-import { apiUrls } from '../constant/index';
+import { apiUrls } from '../constant/api';
 export function signUpApi(account: string, password: string, userName: string) {
   return post(apiUrls.user.signUp, {
     account,

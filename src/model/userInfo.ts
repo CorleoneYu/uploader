@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { createModel } from 'hox';
 import { signInApi, signUpApi } from '../api/user';
-import { history } from '../utils';
+import { history } from '../utils/history';
 
 interface IUserInfo {
   account: string;

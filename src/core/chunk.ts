@@ -1,1 +1,1 @@
-export class Chunk {}
+export default class Chunk {}
