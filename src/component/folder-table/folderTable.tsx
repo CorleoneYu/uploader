@@ -1,43 +1,46 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Table, Button, Modal, message } from 'antd';
-import useFileNodeModel from '../../model/fileNode';
-import useFileTreeModel from '../../model/fileTree';
-import IFileNode from '../../utils/fileNode';
-import Column from 'antd/lib/table/Column';
+import useCurNodeModel from '../../model/curNode';
+import useFileMapModel, { IFileNodeMap } from '../../model/fileMap';
+const { Column } = Table;
 
 const FolderTable = () => {
-  const fileNodeModel = useFileNodeModel();
+  const { curNodeChildren, curNode } = useCurNodeModel();
 
-  const handleDelete = (fileNode: IFileNode) => {
-    Modal.confirm({
-      title: `是否删除该项: ${fileNode.fileName} ?`,
-      content: '删除该文件后不可找回!',
-      okText: '确认',
-      okType: 'danger',
-      onOk: async () => {
-        try {
-          await useFileTreeModel.data!.deleteFile(fileNode);
-          message.success('删除成功');
-        } catch (err) {
-          console.error('err', err);
-        }
-      },
-      cancelText: '取消',
-      onCancel: () => {}
-    });
-  };
+  const handleDelete = useCallback(
+    (fileNode: IFileNodeMap) => {
+      Modal.confirm({
+        title: `是否删除该项: ${fileNode.get('fileName')} ?`,
+        content: '删除该文件后不可找回!',
+        okText: '确认',
+        okType: 'danger',
+        onOk: async () => {
+          try {
+            await useFileMapModel.data!.deleteFile(fileNode, curNode!.get('key'));
+            message.success('删除成功');
+          } catch (err) {
+            console.error('err', err);
+          }
+        },
+        cancelText: '取消',
+        onCancel: () => {},
+      });
+    },
+    [curNode]
+  );
 
-  const handlePreview = (fileNode: IFileNode) => {
-    useFileTreeModel.data!.previewFile(fileNode);
-  };
+  const handlePreview = useCallback((fileNode: IFileNodeMap) => {
+    useFileMapModel.data!.previewNode(fileNode.get('key'));
+  }, []);
 
-  const renderAction = (fileNode: IFileNode) => {
-    return (
-      <div>
-        <Button type="danger" size="small" onClick={() => handleDelete(fileNode)}>
-          删除
-        </Button>
-        {fileNode.isFile && (
+  const renderAction = useCallback(
+    (fileNode: IFileNodeMap) => {
+      return (
+        <div>
+          <Button type="danger" size="small" onClick={() => handleDelete(fileNode)}>
+            删除
+          </Button>
+
           <Button
             type="primary"
             size="small"
@@ -46,25 +49,37 @@ const FolderTable = () => {
           >
             预览
           </Button>
-        )}
-      </div>
-    );
-  };
+        </div>
+      );
+    },
+    [handlePreview, handleDelete]
+  );
 
-  const dataSource = fileNodeModel.fileNode ? fileNodeModel.fileNode.children : [];
+  if (!curNodeChildren) {
+    return <div>loading</div>;
+  }
+
   return (
     <Table
-      dataSource={dataSource}
-      rowKey={(record: IFileNode) => `${record.fileId}-${record.fileName}`}
+      dataSource={curNodeChildren}
+      rowKey={(record: IFileNodeMap) => `${record.get('fileId')}-${record.get('fileName')}`}
       pagination={false}
       expandable={{
-        expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.fileName}</p>,
+        expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.get('fileName')}</p>,
         rowExpandable: () => false,
       }}
     >
-      <Column title="文件名" dataIndex="fileName" key="fileName" />
-      <Column title="大小" dataIndex="size" key="size" />
-      <Column title="创建日期" dataIndex="createDate" key="createDate" />
+      <Column
+        title="文件名"
+        key="fileName"
+        render={(fileNode: IFileNodeMap) => fileNode.get('fileName')}
+      />
+      <Column title="大小" key="size" render={(fileNode: IFileNodeMap) => fileNode.get('size')} />
+      <Column
+        title="创建日期"
+        key="createDate"
+        render={(fileNode: IFileNodeMap) => fileNode.get('createDate')}
+      />
       <Column title="操作" key="action" render={renderAction} />
     </Table>
   );

@@ -1,49 +1,47 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
+import { defaultKey } from '../../constant';
+import useFileMapModel, { IFileNodeMap } from '../../model/fileMap';
+
 import { Tree } from 'antd';
-import useFileTreeModel from '../../model/fileTree';
-
-import IFileNode from '../../utils/fileNode';
-
-const { DirectoryTree } = Tree;
+const { TreeNode } = Tree;
 
 const FileTree = () => {
-  const { fileTree, fetchFileTree, previewFile, previewFolder } = useFileTreeModel();
+  const { fileMap, fetchFileMap, previewNode } = useFileMapModel();
+  const fileRoot = fileMap.get(defaultKey);
 
   useEffect(() => {
-    fetchFileTree();
-  }, [fetchFileTree]);
+    fetchFileMap();
+  }, [fetchFileMap]);
 
-  const onSelect = (keys: any, event: any) => {
-    const [ path ] = keys;
-    const node = event.node as IFileNode;
+  const onSelect = useCallback(
+    (keys: any, event: any) => {
+      const node = event.node;
+      previewNode(node.key);
+    },
+    [previewNode]
+  );
 
-    if (node.isFile) {
-      previewFile(node);
-      return;
-    }
-
-    previewFolder(path, node);
-  };
-
-  const onExpand = () => {
+  const onExpand = useCallback(() => {
     console.log('Trigger Expand');
-  };
+  }, []);
 
-  if (!fileTree) {
+  const renderTree = useCallback((fileNode: IFileNodeMap, fileMap) => {
+    const curNodeChildren = fileNode.get('childrenKey').map((childKey) => fileMap.get(childKey)!);
     return (
-      <div>loading</div>
+      <TreeNode title={fileNode.get('fileName')} key={fileNode.get('key')}>
+        {curNodeChildren && curNodeChildren.map((child) => renderTree(child, fileMap))};
+      </TreeNode>
     );
+  }, []);
+  if (!fileRoot) {
+    return <div>loading</div>;
   }
 
   return (
-    <DirectoryTree
-      defaultExpandAll
-      onSelect={onSelect}
-      onExpand={onExpand}
-      treeData={[fileTree]}
-      expandAction="doubleClick"
-    />
-  )
-}
+    <Tree onSelect={onSelect} onExpand={onExpand} defaultExpandAll>
+      {renderTree(fileRoot, fileMap)}
+    </Tree>
+  );
+};
 
 export default FileTree;

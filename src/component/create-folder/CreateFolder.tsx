@@ -1,11 +1,11 @@
-import React, { useRef, useEffect } from 'react';
-import useCurPath from '../../model/curPath';
-import useFileTree from '../../model/fileTree';
+import React, { useRef, useEffect, useCallback } from 'react';
+import useCurNodeModel from '../../model/curNode';
+import useFileMapModel from '../../model/fileMap';
 
 /* antd */
 import { Modal, Form, Input, message } from 'antd';
 
-const createFolder = useFileTree.data!.createFolder;
+const createFolder = useFileMapModel.data!.createFolder;
 
 interface ICreateFolderProps {
   visible: boolean;
@@ -13,25 +13,27 @@ interface ICreateFolderProps {
 }
 
 const CreateFolder: React.FC<ICreateFolderProps> = ({ visible, hideModal }) => {
+  const { curNode } = useCurNodeModel();
   const [form] = Form.useForm();
-  const curPath = useCurPath.data!.curPath;
+
   const prevVisibleRef = useRef(visible);
   useEffect(() => {
     prevVisibleRef.current = visible;
   }, [visible]);
+
   const prevVisible = prevVisibleRef.current;
 
   useEffect(() => {
-    console.log(visible, prevVisible);
     if (!visible && prevVisible) {
       form.resetFields();
     }
   }, [visible, form, prevVisible]);
 
-  const onOk = () => {
+  const onOk = useCallback(() => {
     form
       .validateFields()
       .then((values) => {
+        const curPath = curNode ? curNode.get('key') : '';
         return createFolder(values.name, curPath);
       })
       .then((data) => {
@@ -41,7 +43,7 @@ const CreateFolder: React.FC<ICreateFolderProps> = ({ visible, hideModal }) => {
       .catch((info) => {
         console.log('info: ', info);
       });
-  };
+  }, [curNode, hideModal, form]);
 
   return (
     <Modal title="新建文件夹" visible={visible} onOk={onOk} onCancel={hideModal}>

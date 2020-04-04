@@ -5,7 +5,6 @@ import { Switch, Route, Redirect } from 'react-router-dom';
 import UploaderViewer from '../uploader-viewer';
 import Home from '../home';
 import FileTree from '../file-tree';
-import Preview from '../preview';
 import MainHeader from '../header';
 
 /* antd */
@@ -19,7 +18,7 @@ function Main() {
         <MainHeader />
       </Header>
       <Layout style={{ height: 'calc(100vh - 64px)' }}>
-        <Sider width={250} style={{ background: '#fff', paddingTop: 10, }}>
+        <Sider width={250} style={{ background: '#fff', paddingTop: 10 }}>
           <FileTree />
         </Sider>
         <Layout style={{ padding: '24px' }}>
@@ -34,15 +33,14 @@ function Main() {
           >
             <Switch>
               <Route path="/main/upload" component={UploaderViewer} />
-              <Route path="/main/preview" component={Preview} />
               <Route path="/main/home" render={() => <Home />} />
-              <Redirect from="*" to="/main/upload" />
+              <Redirect from="*" to="/main/home" />
             </Switch>
           </Content>
         </Layout>
       </Layout>
     </Layout>
-  )
+  );
 }
 
 export default Main;

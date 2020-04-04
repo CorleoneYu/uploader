@@ -52,16 +52,6 @@ export function useUserInfo() {
     try {
       const data = await signUpApi(account, password, userName);
       console.log('signUp: ', data);
-      // const { token } = data.data;
-      // setToken(token);
-      // setUserInfo((userInfo) => {
-      //   return {
-      //     ...userInfo,
-      //     account,
-      //     userName,
-      //     token,
-      //   };
-      // });
     } catch (err) {
       console.log('signUp: ', err);
       return err;
