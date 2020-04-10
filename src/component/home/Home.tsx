@@ -35,16 +35,26 @@ const Home = () => {
     return <FolderTable />;
   }, [curNode]);
 
-  return (
-    <div>
-      <HomeHeader>
-        <h2>路径：{curNodeKey ? curNodeKey : ''}</h2>
+  const renderBtn = useCallback(() => {
+    if (curNode && !curNode.get('isFile')) {
+      return (
         <div>
           <Button type="primary">上传</Button>
           <Button style={{ marginLeft: 10 }} onClick={showModal}>
             新建
           </Button>
         </div>
+      );
+    }
+
+    return;
+  }, [curNode, showModal]);
+
+  return (
+    <div>
+      <HomeHeader>
+        <h2>路径：{curNodeKey ? curNodeKey : ''}</h2>
+        {renderBtn()}
       </HomeHeader>
       <CreateFolderModal visible={modalVisible} hideModal={hideModal} />
       {renderMain()}

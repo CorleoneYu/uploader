@@ -13,17 +13,27 @@ export function prepareApi(fileName: string, fileSize: number, filePath: string)
   });
 }
 
-export function uploadApi(uploadId: number, chunkIndex: number) {
-  return post(
-    apiUrls.file.upload,
-    {
-      chunkIndex,
-      uploadId,
-    },
-    {
-      'Content-Type': 'application/octet-stream	',
-    }
-  );
+export function uploadApi(uploadId: number, chunkIndex: number, data: any) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.addEventListener('loadend', () => {
+      resolve(reader.result);
+    });
+    reader.readAsArrayBuffer(data);
+  }).then((arrayBuffer: any) => {
+    return post(
+      `${apiUrls.file.upload}?uploadId=${uploadId}&chunkIndex=${chunkIndex + 1}`,
+      arrayBuffer as any,
+      {
+        headers: {
+          'Content-Type': 'application/octet-stream',
+        },
+        transformRequest: (data: any, headers: any) => {
+          return data;
+        },
+      }
+    );
+  });
 }
 
 export function finishApi(uploadId: number) {

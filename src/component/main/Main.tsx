@@ -18,7 +18,7 @@ function Main() {
         <MainHeader />
       </Header>
       <Layout style={{ height: 'calc(100vh - 64px)' }}>
-        <Sider width={250} style={{ background: '#fff', paddingTop: 10 }}>
+        <Sider width={250} style={{ background: '#fff', paddingTop: 10, overflow: 'auto' }}>
           <FileTree />
         </Sider>
         <Layout style={{ padding: '24px' }}>
@@ -34,7 +34,7 @@ function Main() {
             <Switch>
               <Route path="/main/upload" component={UploaderViewer} />
               <Route path="/main/home" render={() => <Home />} />
-              <Redirect from="*" to="/main/home" />
+              <Redirect from="*" to="/main/upload" />
             </Switch>
           </Content>
         </Layout>

@@ -2,16 +2,37 @@ import { FileUpload, Directory, Task, Uploader } from './index';
 
 export const getSingleUploader = _getSingleUploaderCreater();
 
-export function createTask(fileList: File[]) {
-  const task = new Task();
+export function createFileTask(fileList: File[], path: string) {
+  console.log('createFileTask -> fileList', fileList);
+  const task = new Task(path);
+
+  for (let file of fileList) {
+    const fileUpload = new FileUpload({
+      file,
+      task,
+      path,
+      parentDir: null,
+    });
+    task.taskLink.push(fileUpload);
+  }
+  console.log('task', task);
+  return task;
+}
+
+export function createDirTask(fileList: File[], path: string) {
+  const task = new Task(path);
   createFileTree(fileList, task);
   console.log('task', task);
   return task;
 }
 
 export function createFileTree(fileList: File[], task: Task) {
+  // 为了好写 所以 mock 写的 root
+  // 其实不是 dir 或 file
+  // 只是一个简单的对象
   const root = {
     subDirs: [],
+    path: task.path,
   };
   for (let file of fileList) {
     createFileNode(file, root, task);
@@ -22,6 +43,9 @@ export function createFileTree(fileList: File[], task: Task) {
 }
 
 export function createFileNode(file: File, root: any, task: Task) {
+  // 只有文件夹才有 webkitRelativePath
+  // 现在只有 上传文件夹功能
+  // TODO: 兼容上传文件
   const pathAry = (file as any).webkitRelativePath.split('/');
   console.log('pathAry: ', pathAry);
   pathAry.pop();
@@ -37,12 +61,20 @@ export function createFileNode(file: File, root: any, task: Task) {
       if (subDirs[j].name === targetName) {
         parent = subDirs[j];
         isFind = true;
+        break;
       }
+    }
+
+    let path = parent.path;
+    if (parent.name) {
+      // 如果 parent 为 root 时 root.name 为空
+      path += `/${parent.name}`;
     }
 
     if (!isFind) {
       const dir = new Directory({
         task,
+        path,
         parentDir: parent,
         name: targetName,
       });
@@ -55,6 +87,10 @@ export function createFileNode(file: File, root: any, task: Task) {
   const fileUpload = new FileUpload({
     file,
     task,
+    // 这里需要保证 fileUpload 的 parent 肯定为 dir
+    // 所以现在只能 上传文件夹
+    // TODO: 兼容上传文件
+    path: `${parent.path}/${parent.name}`,
     parentDir: parent,
   });
 
@@ -74,7 +110,7 @@ export function mockRequest(timeout: number = TIMEOUT) {
 
 function _getSingleUploaderCreater() {
   let singleUploader: Uploader | null = null;
-  return function() {
+  return function () {
     if (singleUploader) {
       return singleUploader;
     }

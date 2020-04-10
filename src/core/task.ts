@@ -6,13 +6,15 @@ let taskId = 1;
 export default class Task {
   public taskId: number;
   public root: FileUpload | Directory | null = null;
+  public path: string = '';
   public taskLink: FileTree[] = [];
   // todo 状态机
   public taskStatus: TaskStatus = 'paused';
   public currentIdx = 0;
 
-  constructor() {
+  constructor(path: string) {
     this.taskId = taskId++;
+    this.path = path;
   }
 
   pause() {
@@ -28,14 +30,16 @@ export default class Task {
     console.log('task upload');
     this.taskStatus = 'uploading';
 
-    while (this.taskStatus === 'uploading' && !this.isFinish()) {
-      const taskItem = this.taskLink[this.currentIdx];
-      await taskItem.upload();
+    const taskItem = this.taskLink[this.currentIdx];
+    await taskItem.upload();
+    // while (this.taskStatus === 'uploading' && !this.isFinish()) {
+    //   const taskItem = this.taskLink[this.currentIdx];
+    //   await taskItem.upload();
 
-      if (taskItem.isUploaded()) {
-        this.currentIdx++;
-      }
-    }
+    //   if (taskItem.isUploaded()) {
+    //     this.currentIdx++;
+    //   }
+    // }
 
     if (this.isFinish()) {
       this.taskStatus = 'success';

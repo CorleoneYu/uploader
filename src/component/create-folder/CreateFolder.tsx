@@ -5,8 +5,6 @@ import useFileMapModel from '../../model/fileMap';
 /* antd */
 import { Modal, Form, Input, message } from 'antd';
 
-const createFolder = useFileMapModel.data!.createFolder;
-
 interface ICreateFolderProps {
   visible: boolean;
   hideModal: () => void;
@@ -14,6 +12,7 @@ interface ICreateFolderProps {
 
 const CreateFolder: React.FC<ICreateFolderProps> = ({ visible, hideModal }) => {
   const { curNode } = useCurNodeModel();
+  const { createFolder } = useFileMapModel();
   const [form] = Form.useForm();
 
   const prevVisibleRef = useRef(visible);
@@ -43,7 +42,7 @@ const CreateFolder: React.FC<ICreateFolderProps> = ({ visible, hideModal }) => {
       .catch((info) => {
         console.log('info: ', info);
       });
-  }, [curNode, hideModal, form]);
+  }, [form, curNode, createFolder, hideModal]);
 
   return (
     <Modal title="新建文件夹" visible={visible} onOk={onOk} onCancel={hideModal}>

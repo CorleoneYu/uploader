@@ -5,10 +5,11 @@ import Directory from './directory';
 import Chunk from './chunk';
 import {
   getSingleUploader,
-  createTask,
+  createDirTask,
   createFileTree,
   createFileNode,
   mockRequest,
+  createFileTask,
 } from './utils';
 
 export {
@@ -18,8 +19,9 @@ export {
   Directory,
   Chunk,
   getSingleUploader,
-  createTask,
+  createDirTask,
   createFileTree,
   createFileNode,
   mockRequest,
+  createFileTask,
 };

@@ -10,14 +10,14 @@ export const apiUrls = {
   file: {
     getFileTree: '/fileTree',
     prepare: '/prepare',
-    upload: 'upload',
+    upload: '/upload',
     finish: '/finish',
     createFolder: '/createFolder',
     delete: '/deleteFile', // 删除文件(夹)
     remove: '/removeFile', // 移动文件(夹)
     copy: '/copyFile',
     share: '/share',
-  }
+  },
 };
 
 export enum HttpCode {

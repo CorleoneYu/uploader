@@ -48,18 +48,16 @@ export function useFileMap() {
   const fetchFileMap = useCallback(async () => {
     const data = await getFileTreeApi();
     const rootMap = formatFileMap(data.data);
-    console.log('fetchFileMap -> root', rootMap);
-
     setFileMap(rootMap);
     useCurNodeKey.data!.setCurNodeKey(defaultKey);
     return rootMap;
   }, []);
 
-  // 删除文件
-  const deleteFile = useCallback(async (fileNode: IFileNodeMap, path: string) => {
-    await deleteFileApi(fileNode.get('fileName'), fileNode.get('path'));
+  // 删除文件(夹)
+  const deleteFile = useCallback(
+    async (fileNode: IFileNodeMap, path: string) => {
+      await deleteFileApi(fileNode.get('fileName'), fileNode.get('path'));
 
-    setFileMap((fileMap) => {
       // 1. 更新对应父节点的 childrenKey 字段
       // path　即父节点 key
       const parentKey = path;
@@ -75,16 +73,19 @@ export function useFileMap() {
       newFileMap = newFileMap.delete(fileNode.get('key'));
 
       // 3. 更新 fileMap
-      return newFileMap;
-    });
-  }, []);
+      setFileMap(newFileMap);
+    },
+    [fileMap]
+  );
 
+  // 新建文件夹
   const createFolder = useCallback(async (folderName: string, path: string) => {
     const data = await createFolderApi(folderName, path);
-    // 新文件夹 immutable
-    const newFolder = _createFileMap(data.data);
 
     setFileMap((fileMap) => {
+      // 新文件夹 immutable
+      const newFolder = _createFileMap(data.data);
+
       // 1. 新增 key
       let newFileMap = fileMap.set(newFolder.get('key'), newFolder);
 
@@ -108,6 +109,12 @@ export function useFileMap() {
     },
     [fileMap]
   );
+
+  // TODO: 上传文件 prepare 阶段
+
+  // TODO: 上传文件 sendChunks 阶段
+
+  // TODO: 上传文件 finish 阶段
 
   return {
     fileMap,
