@@ -5,6 +5,7 @@ import history from '../../utils/history';
 /* component */
 import Main from '../main';
 import Login from '../login-page';
+import Pieces from '../pieces';
 
 function Layout() {
   return (
@@ -12,7 +13,8 @@ function Layout() {
       <Switch>
         <Route path="/main" component={Main} />
         <Route path="/login" component={Login} />
-        <Redirect from="*" to="/main" />
+        <Route path="/pieces" component={Pieces} />
+        <Redirect from="*" to="/pieces" />
       </Switch>
     </Router>
   );

@@ -2,6 +2,7 @@ import axios from 'axios';
 import { message } from 'antd';
 import { HttpCode } from '../constant/api';
 import { getToken } from '../model/userInfo';
+import { history } from '../utils/history';
 
 const myAxios = axios.create({
   timeout: 10000,
@@ -37,6 +38,7 @@ myAxios.interceptors.response.use(
         message.error({
           content: '登录已过期，请重新登录！',
         });
+        history.replace('/login');
         break;
       case HttpCode.token_err:
         message.error({
