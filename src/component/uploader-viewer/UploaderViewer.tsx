@@ -1,107 +1,35 @@
-import React, { useState, useRef, useCallback } from 'react';
-import { createDirTask, createFileTask, getSingleUploader, Uploader, Task } from '../../core';
-
+import React from 'react';
+import useInput from './hooks/useInput';
+import useUploader from './hooks/useUploader';
+import { cleanAllFile } from '../../api/file';
+import { UploaderViewerBox } from './style';
 /* antd */
 import { Button } from 'antd';
 
-interface IState {
-  tasks: Task[];
-}
-
 function UploaderViewer() {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const inputBoxRef = useRef<HTMLDivElement | null>(null);
-  const inputDomRef = useRef<HTMLInputElement | null>(null);
-  const uploaderRef = useRef<Uploader>(getSingleUploader());
-
-  // const handleFileChange = useCallback(
-  //   (event: any) => {
-  //     const task = createDirTask(event.target.files, '我的文件');
-  //     const uploader = uploaderRef.current;
-  //     uploader.addTask(task);
-  //     uploader.upload(task.taskId);
-  //     setTasks((oldTasks: Task[]) => [...oldTasks, task]);
-  //   },
-  //   [setTasks]
-  // );
-
-  // const createInput = useCallback(() => {
-  //   if (inputDomRef.current) {
-  //     return inputDomRef.current;
-  //   }
-
-  //   const inputEl = document.createElement('input');
-  //   inputEl.setAttribute('type', 'file');
-  //   inputEl.setAttribute('webkitdirectory', 'webkitdirectory');
-  //   inputEl.style.display = 'none';
-  //   inputEl.addEventListener('change', handleFileChange);
-  //   inputDomRef.current = inputEl;
-  //   return inputEl;
-  // }, [handleFileChange]);
-
-  const handleFileChange = useCallback((event: any) => {
-    const task = createFileTask(event.target.files, '我的文件');
-    const uploader = uploaderRef.current;
-    uploader.addTask(task);
-    uploader.upload(task.taskId);
-    setTasks((oldTasks: Task[]) => [...oldTasks, task]);
-  }, []);
-
-  const createInput = useCallback(() => {
-    if (inputDomRef.current) {
-      return inputDomRef.current;
-    }
-
-    const inputEl = document.createElement('input');
-    inputEl.setAttribute('type', 'file');
-    inputEl.style.display = 'none';
-    inputEl.addEventListener('change', handleFileChange);
-    console.log('createInput -> Event', Event);
-    inputDomRef.current = inputEl;
-    return inputEl;
-  }, [handleFileChange]);
-
-  const handleClick = useCallback(() => {
-    if (!inputBoxRef.current) {
-      return;
-    }
-
-    const inputDom = createInput();
-    inputBoxRef.current.appendChild(inputDom);
-    inputDom.click();
-  }, [createInput]);
-
-  const toggle = useCallback((task: Task) => {
-    console.log('task togglePause', task);
-    if (task.taskStatus === 'paused') {
-      task.upload();
-    } else if (task.taskStatus === 'uploading') {
-      task.pause();
-    }
-  }, []);
-
+  const { handleFileChange } = useUploader();
+  const { inputBoxRef, handleClick } = useInput(handleFileChange);
   return (
     <div>
-      <p>upload viewer</p>
       <div className="inputBox" ref={inputBoxRef}>
         <Button onClick={handleClick}>选择文件夹</Button>
+        <Button onClick={cleanAllFile} type="danger" style={{ marginLeft: '20px' }}>
+          清除脏数据
+        </Button>
       </div>
-      {tasks.map((task: Task) => {
-        return (
-          <div key={`task-${task.taskId}`}>
-            {task.taskLink.map((node, idx) => {
-              return <div key={`node-${idx}`}>{node.name}</div>;
-            })}
-            <Button
-              onClick={() => {
-                toggle(task);
-              }}
-            >
-              暂停/恢复
-            </Button>
+      {/* <UploaderViewerBox>
+        <div className="header"></div>
+        <div className="body">
+          <div className="bar"></div>
+          <div className="task-list">
+            {tasks.map((task: Task) => (
+              <div className="task-item" key={task.taskId}>
+                {task.root && task.root.name}
+              </div>
+            ))}
           </div>
-        );
-      })}
+        </div>
+      </UploaderViewerBox> */}
     </div>
   );
 }

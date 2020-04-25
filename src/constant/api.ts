@@ -17,6 +17,7 @@ export const apiUrls = {
     remove: '/removeFile', // 移动文件(夹)
     copy: '/copyFile',
     share: '/share',
+    cleanAllFile: '/cleanAllFile',
   },
 };
 

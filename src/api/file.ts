@@ -13,7 +13,7 @@ export function prepareApi(fileName: string, fileSize: number, filePath: string)
   });
 }
 
-export function uploadApi(uploadId: number, chunkIndex: number, data: any) {
+export function uploadApi(uploadId: number, chunkIndex: number, data: any, onProgress: any) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.addEventListener('loadend', () => {
@@ -25,6 +25,7 @@ export function uploadApi(uploadId: number, chunkIndex: number, data: any) {
       `${apiUrls.file.upload}?uploadId=${uploadId}&chunkIndex=${chunkIndex + 1}`,
       arrayBuffer as any,
       {
+        onUploadProgress: onProgress,
         headers: {
           'Content-Type': 'application/octet-stream',
         },
@@ -54,4 +55,11 @@ export function deleteFileApi(fileName: string, path: string) {
     fileName,
     path,
   });
+}
+
+/**
+ * debugger 清除所有文件（包含脏数据）
+ */
+export function cleanAllFile() {
+  return get(apiUrls.file.cleanAllFile, {});
 }

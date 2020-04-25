@@ -11,6 +11,8 @@ export function createFileTask(fileList: File[], path: string) {
       file,
       task,
       path,
+      type: file.type,
+      name: file.name,
       parentDir: null,
     });
     task.taskLink.push(fileUpload);
@@ -87,11 +89,10 @@ export function createFileNode(file: File, root: any, task: Task) {
   const fileUpload = new FileUpload({
     file,
     task,
-    // 这里需要保证 fileUpload 的 parent 肯定为 dir
-    // 所以现在只能 上传文件夹
-    // TODO: 兼容上传文件
     path: `${parent.path}/${parent.name}`,
     parentDir: parent,
+    type: file.type,
+    name: file.name,
   });
 
   (parent as Directory).subFiles.push(fileUpload);
@@ -101,6 +102,7 @@ export function createFileNode(file: File, root: any, task: Task) {
 export const TIMEOUT = 1000;
 
 export function mockRequest(timeout: number = TIMEOUT) {
+  console.log('sleep: ', timeout);
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve('success');

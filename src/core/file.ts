@@ -1,20 +1,22 @@
-import { Directory, Chunk, Task, mockRequest } from './index';
+import Directory from './directory';
+import Chunk from './chunk';
+import SubTask, { ISubTaskProps } from './subTask';
 import { prepareApi, finishApi } from '../api/file';
-export type FileStatus = 'init' | 'prepared' | 'sent' | 'uploaded';
+import { mockRequest } from './utils';
+export type FileStatus = 'init' | 'prepared' | 'sent' | 'uploaded' | 'error';
 
 let fileId = 1;
 
-export default class FileUpload {
+export interface IFileUploadProps extends ISubTaskProps {
+  file: File;
+  type: string;
+  parentDir: Directory | null;
+}
+export default class FileUpload extends SubTask {
   public fileId: string;
   public file: File;
-  public size: number;
   public type: string;
-  public name: string;
-  public path: string;
-
   public parentDir: Directory | null = null;
-  public task: Task;
-
   public chunks: Chunk[] = [];
 
   // 后台返回的字段
@@ -22,76 +24,66 @@ export default class FileUpload {
   public chunkSize: number = -1; // 分块大小
   public chunkNum: number = -1; // 分块数量
 
+  public uploadedChunkIdx: number = -1; // 已上传的 chunk idx
+
   // todo: 状态机
   public fileStatus: FileStatus = 'init';
 
-  constructor({
-    file,
-    parentDir,
-    task,
-    path,
-  }: {
-    file: File;
-    parentDir: Directory | null;
-    task: Task;
-    path: string;
-  }) {
+  public get totalSize(): number {
+    return this.file.size;
+  }
+
+  public get uploadedSize(): number {
+    const uploadedChunkSize = (this.uploadedChunkIdx + 1) * this.chunkSize;
+    const uploadingChunkSize = this.currentChunk.uploadedSize;
+    return uploadedChunkSize + uploadingChunkSize;
+  }
+
+  constructor(props: IFileUploadProps) {
+    super(props);
     this.fileId = `file-${fileId++}`;
-    const { size, type, name } = file;
-    this.file = file;
-    this.name = name;
-    this.size = size;
-    this.type = type;
-    this.path = path;
+    this.file = props.file;
+    this.type = props.file.type;
+    this.parentDir = props.parentDir;
 
-    this.parentDir = parentDir;
-
-    this.task = task;
     this.fileStatus = 'init';
   }
 
-  async upload() {
+  public async upload() {
     console.log('file upload', this.name);
 
     if (this.fileStatus === 'init') {
-      const res = await this.prepare();
-      if (!res) {
-        return false;
-      }
+      await this.prepare();
+      return;
     }
 
     if (this.fileStatus === 'prepared') {
-      const res = await this.sendChunks();
-      if (!res) {
-        return false;
-      }
+      await this.sendChunks();
+      return;
     }
 
     if (this.fileStatus === 'sent') {
-      const res = await this.finish();
-      if (!res) {
-        return false;
-      }
+      const TIMEOUT = 500;
+      await mockRequest(TIMEOUT);
+      await this.finish();
+      return;
     }
-
-    return true;
   }
 
-  async prepare(): Promise<boolean> {
+  private async prepare() {
     console.log('file prepare', this.name);
 
     try {
-      const res = await prepareApi(this.name, this.size, this.path);
+      const res = await prepareApi(this.name, this.totalSize, this.path);
       const { uploadId, chunkNum, chunkSize } = res.data;
       this.uploadId = uploadId;
       this.chunkNum = chunkNum;
       this.chunkSize = chunkSize;
       this.createChunk();
       this.fileStatus = 'prepared';
-      return true;
     } catch (e) {
+      this.fileStatus = 'error';
       console.log('file prepare err', e);
-      return false;
     }
   }
 
@@ -116,28 +108,31 @@ export default class FileUpload {
     this.chunks = chunks;
   }
 
-  async sendChunks(): Promise<boolean> {
+  private get currentChunk(): Chunk {
+    const { chunks, uploadedChunkIdx } = this;
+    return chunks[uploadedChunkIdx+1];
+  }
+
+  private async sendChunks() {
     console.log('file sendChunks', this.name);
 
     try {
-      // 循环发送chunk
-      const { chunks } = this;
-      for (let i = 0; i < chunks.length; i++) {
-        const chunk = chunks[i];
-        await chunk.send();
-      }
+      // 发送chunk
+      const currentChunk = this.currentChunk;
+      await currentChunk.send();
+      this.uploadedChunkIdx++;
 
-      this.fileStatus = 'sent';
-      return true;
+      if (this.uploadedChunkIdx === this.chunks.length - 1) {
+        this.fileStatus = 'sent';
+      }
+      
     } catch (e) {
       console.log('file sendChunks err', e);
-      return false;
     }
   }
 
   // 上传完成之后，以一定频率循环调用此接口
-  // 直到返回true，表示上传成功结束。
-  async finish(): Promise<boolean> {
+  private async finish() {
     console.log('file finish', this.name);
 
     try {
@@ -146,21 +141,17 @@ export default class FileUpload {
       // 若后台处理完毕 data 为 true
       if (res.data) {
         this.fileStatus = 'uploaded';
-      }
-
-      return true;
+      } 
     } catch (e) {
       console.log('file finish err', e);
-      return false;
     }
   }
 
-  // 可以跟 directory 提公共方法
-  isTaskPaused() {
-    return this.task.isPaused();
+  public isError() {
+    return this.fileStatus === 'error';
   }
 
-  isUploaded() {
+  public isUploaded() {
     return this.fileStatus === 'uploaded';
   }
 }

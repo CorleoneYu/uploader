@@ -20,6 +20,6 @@ export default class Uploader {
       return;
     }
 
-    this.tasks.get(taskId)!.upload();
+    this.tasks.get(taskId)!.upload(true);
   }
 }

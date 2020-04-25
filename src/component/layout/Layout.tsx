@@ -14,7 +14,7 @@ function Layout() {
         <Route path="/main" component={Main} />
         <Route path="/login" component={Login} />
         <Route path="/pieces" component={Pieces} />
-        <Redirect from="*" to="/pieces" />
+        <Redirect from="*" to="/main" />
       </Switch>
     </Router>
   );

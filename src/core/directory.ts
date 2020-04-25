@@ -1,58 +1,68 @@
-import { FileUpload, Task } from './index';
+import FileUpload  from './file';
+import SubTask, { ISubTaskProps } from './subTask';
 import useFileMapModel from '../model/fileMap';
 
-export type DirStatus = 'init' | 'uploaded';
+export type DirStatus = 'init' | 'uploaded' | 'error';
 
+export interface IDirectoryProps extends ISubTaskProps {
+  parentDir: Directory | null;
+}
 const createFolder = useFileMapModel.data!.createFolder;
 
 let dirId = 1;
-export default class Directory {
+export default class Directory extends SubTask{
   public dirId: string;
-  public name: string = '';
-  public path: string = '';
   public parentDir: Directory | null = null;
-  public task: Task;
   public subFiles: FileUpload[] = [];
   public subDirs: Directory[] = [];
   public dirStatus: DirStatus = 'init';
 
-  constructor({
-    task,
-    parentDir,
-    name,
-    path,
-  }: {
-    task: Task;
-    parentDir: Directory | null;
-    name: string;
-    path: string;
-  }) {
+  constructor(props: IDirectoryProps) {
+    super(props);
     this.dirId = `dir-${dirId++}`;
-    this.task = task;
-    this.parentDir = parentDir;
-    this.name = name;
-    this.path = path;
+    this.parentDir = props.parentDir;
   }
 
-  async upload(): Promise<boolean> {
+  public async upload() {
     console.log('directory upload', this.name);
 
     try {
       await createFolder(this.name, this.path);
       this.dirStatus = 'uploaded';
-      return true;
     } catch (e) {
       console.log('dir upload err', e);
-      return false;
     }
   }
 
-  // 可以跟 fileUpload 提公共方法
-  isTaskPaused() {
-    return this.task.isPaused();
+  public isError() {
+    return this.dirStatus === 'error';
   }
 
-  isUploaded() {
+  public isUploaded() {
     return this.dirStatus === 'uploaded';
+  }
+
+
+  private cachedSize: number = -1;
+  public get totalSize(): number {
+    if (this.cachedSize !== -1) {
+      return this.cachedSize;
+    }
+
+    const filesSize = this.subFiles.reduce((acc, file) => {
+      return acc + file.totalSize;
+    }, 0);
+
+    const dirsSize = this.subDirs.reduce((acc, dir) => {
+      return acc + dir.totalSize;
+    }, 0);
+
+    return filesSize + dirsSize;
+  }
+
+  public get uploadedSize(): number {
+    return this.subFiles.reduce((acc, file) => {
+      return file.uploadedSize;
+    }, 0)
   }
 }
