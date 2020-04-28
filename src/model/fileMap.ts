@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { createModel } from 'hox';
 import { Map } from 'immutable';
 import useCurNodeKey from './curNodeKey';
+import { formatSize, formatTime } from '../utils';
 import { getFileTreeApi, deleteFileApi, createFolderApi } from '../api/file';
 import { defaultKey } from '../constant';
 const FOLDER_ID = -1;
@@ -158,7 +159,7 @@ function _createFileMap(fileNode: any): IFileNodeMap {
     fileId: fileNode.fileId || FOLDER_ID,
     fileName: fileNode.fileName,
     _size: fileNode.size,
-    size: _formatSize(fileNode.size),
+    size: formatSize(fileNode.size),
     type: fileNode.type || '',
     isFile: fileNode.file,
     isCopy: fileNode.copy,
@@ -166,9 +167,9 @@ function _createFileMap(fileNode: any): IFileNodeMap {
     _createDate: fileNode.createDate,
     _modifyDate: fileNode.modifyDate,
     _readDate: fileNode.readDate,
-    createDate: _formatTime(fileNode.createDate * 1000),
-    modifyDate: _formatTime(fileNode.modifyDate * 1000),
-    readDate: _formatTime(fileNode.readDate * 1000),
+    createDate: formatTime(fileNode.createDate * 1000),
+    modifyDate: formatTime(fileNode.modifyDate * 1000),
+    readDate: formatTime(fileNode.readDate * 1000),
     childrenKey: [],
 
     title: fileNode.fileName,
@@ -177,35 +178,6 @@ function _createFileMap(fileNode: any): IFileNodeMap {
   });
 }
 
-function _formatTime(time: number): string {
-  const date = new Date(time);
-  const Y = date.getFullYear() + '-';
-  const M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
-  const D = date.getDate() + ' ';
-  const h = date.getHours() + ':';
-  const m = date.getMinutes() + ':';
-  const s = date.getSeconds();
 
-  return Y + M + D + h + m + s;
-}
 
-function _formatSize(bytes: number) {
-  var symbols = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-  var exp = Math.floor(Math.log(bytes) / Math.log(2));
-  if (exp < 1) {
-    exp = 0;
-  }
-  var i = Math.floor(exp / 10);
-  bytes = bytes / Math.pow(2, 10 * i);
 
-  let str = '';
-  if (bytes.toString().length > bytes.toFixed(2).toString().length) {
-    str = bytes.toFixed(2);
-  }
-
-  if (!str) {
-    return '空';
-  }
-
-  return str + ' ' + symbols[i];
-}

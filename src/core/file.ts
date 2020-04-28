@@ -34,6 +34,10 @@ export default class FileUpload extends SubTask {
   }
 
   public get uploadedSize(): number {
+    if (this.uploadedChunkIdx === -1) {
+      return 0;
+    }
+
     const uploadedChunkSize = (this.uploadedChunkIdx + 1) * this.chunkSize;
     const uploadingChunkSize = this.currentChunk.uploadedSize;
     return uploadedChunkSize + uploadingChunkSize;

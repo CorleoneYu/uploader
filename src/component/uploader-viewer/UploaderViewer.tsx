@@ -1,14 +1,25 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import useInput from './hooks/useInput';
 import useUploader from './hooks/useUploader';
+import useVisible from './hooks/useVisible';
+import Header from './Header';
+import List from './List';
+import Bar from './Bar';
 import { cleanAllFile } from '../../api/file';
 import { UploaderViewerBox } from './style';
 /* antd */
 import { Button } from 'antd';
 
 function UploaderViewer() {
-  const { handleFileChange } = useUploader();
+  const { handleFileChange, state, uploader } = useUploader();
+  const { visible, setVisible } = useVisible();
+  const { tasks } = state;
   const { inputBoxRef, handleClick } = useInput(handleFileChange);
+
+  const handleClose = useCallback(() => {
+    setVisible(false);
+  }, [setVisible]);
+
   return (
     <div>
       <div className="inputBox" ref={inputBoxRef}>
@@ -17,19 +28,11 @@ function UploaderViewer() {
           清除脏数据
         </Button>
       </div>
-      {/* <UploaderViewerBox>
-        <div className="header"></div>
-        <div className="body">
-          <div className="bar"></div>
-          <div className="task-list">
-            {tasks.map((task: Task) => (
-              <div className="task-item" key={task.taskId}>
-                {task.root && task.root.name}
-              </div>
-            ))}
-          </div>
-        </div>
-      </UploaderViewerBox> */}
+      <UploaderViewerBox visible={visible}>
+        <Header handleClose={handleClose} uploader={uploader} />
+        <Bar uploader={uploader} />
+        <List tasks={tasks} />
+      </UploaderViewerBox>
     </div>
   );
 }

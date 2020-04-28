@@ -2,11 +2,12 @@ import { FileUpload, Directory, Task, Uploader } from './index';
 
 export const getSingleUploader = _getSingleUploaderCreater();
 
-export function createFileTask(fileList: File[], path: string) {
+export function createFileTask(fileList: File[], path: string): Task[] {
   console.log('createFileTask -> fileList', fileList);
-  const task = new Task(path);
+  const tasks: Task[] = [];
 
   for (let file of fileList) {
+    const task = new Task(path);
     const fileUpload = new FileUpload({
       file,
       task,
@@ -16,9 +17,12 @@ export function createFileTask(fileList: File[], path: string) {
       parentDir: null,
     });
     task.taskLink.push(fileUpload);
+    task.root = fileUpload;
+    tasks.push(task);
   }
-  console.log('task', task);
-  return task;
+
+  console.log('tasks', tasks);
+  return tasks;
 }
 
 export function createDirTask(fileList: File[], path: string) {

@@ -4,7 +4,7 @@ export type TaskStatus = 'paused' | 'uploading' | 'success';
 let taskId = 1;
 
 export default class Task {
-  public taskId: number;
+  public taskId: string;
   public root: SubTask | null = null;
   public path: string = '';
   public taskLink: SubTask[] = [];
@@ -13,8 +13,20 @@ export default class Task {
   public taskStatus: TaskStatus = 'paused';
   public currentIdx = 0;
 
+  public get name() {
+    return this.root ? this.root.name : '';
+  }
+
+  public get size() {
+    return this.root ? this.root.totalSize : 0;
+  }
+
+  public get uploadedSize() {
+    return this.root ? this.root.uploadedSize : 0;
+  }
+
   constructor(path: string) {
-    this.taskId = taskId++;
+    this.taskId = `task-${taskId++}`;
     this.path = path;
   }
 

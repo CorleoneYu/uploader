@@ -1,13 +1,15 @@
 import { Task } from './index';
 
 export default class Uploader {
-  public tasks: Map<number, Task> = new Map();
+  public tasks: Map<string, Task> = new Map();
 
-  addTask(task: Task) {
-    this.tasks.set(task.taskId, task);
+  addTask(tasks: Task[]) {
+    tasks.forEach(task => {
+      this.tasks.set(task.taskId, task);
+    })
   }
 
-  cancelTask(taskId: number) {
+  cancelTask(taskId: string) {
     if (!this.tasks.get(taskId)) {
       return;
     }
@@ -15,11 +17,13 @@ export default class Uploader {
     this.tasks.delete(taskId);
   }
 
-  upload(taskId: number) {
-    if (!this.tasks.get(taskId)) {
-      return;
-    }
-
-    this.tasks.get(taskId)!.upload(true);
+  upload(taskIds: string[]) {
+    taskIds.forEach(taskId => {
+      if (!this.tasks.get(taskId)) {
+        return;
+      }
+  
+      this.tasks.get(taskId)!.upload(true);
+    })
   }
 }

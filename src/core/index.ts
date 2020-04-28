@@ -1,5 +1,5 @@
 import Uploader from './uploader';
-import Task from './task';
+import Task, { TaskStatus } from './task';
 import FileUpload from './file';
 import Directory from './directory';
 import Chunk from './chunk';
@@ -25,3 +25,5 @@ export {
   mockRequest,
   createFileTask,
 };
+
+export type TaskStatus = TaskStatus;
