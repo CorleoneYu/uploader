@@ -11,8 +11,12 @@ import { UploaderViewerBox } from './style';
 import { Button } from 'antd';
 
 function UploaderViewer() {
-  const { handleFileChange, state, uploader } = useUploader();
   const { visible, setVisible } = useVisible();
+  const afterFileChange = useCallback(() => {
+    setVisible(true);
+  }, [setVisible]);
+  const { handleFileChange, state, uploader } = useUploader(afterFileChange);
+
   const { tasks } = state;
   const { inputBoxRef, handleClick } = useInput(handleFileChange);
 

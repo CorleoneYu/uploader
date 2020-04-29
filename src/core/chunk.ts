@@ -31,8 +31,6 @@ export default class Chunk {
 
   onProgress = (event: ProgressEvent): void => {
     this.uploadedSize = event.loaded;
-    const { progress, totalSize, uploadedSize } = this.fileUpload;
     eventEmitter.emit(EVENTS.UPDATE_TASK, this.fileUpload.task);
-    console.log('onProgress', this.uploadedSize, progress, totalSize, uploadedSize);
   }
 }

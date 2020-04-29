@@ -16,13 +16,13 @@ export interface IUploaderUI {
   tasks: ITaskUI[];
 }
 
-const mockTask: ITaskUI = {
-  taskId: 'task-1',
-  name: 'test',
-  size: 1054,
-  uploadedSize: 256,
-  status: 'uploading',
-}
+// const mockTask: ITaskUI = {
+//   taskId: 'task-1',
+//   name: 'test',
+//   size: 1054,
+//   uploadedSize: 256,
+//   status: 'uploading',
+// }
 
 export const initialState: IUploaderUI = {
   tasks: [],
@@ -54,7 +54,6 @@ function addTasks(tasks: Task[], state: IUploaderUI): IUploaderUI {
 
 function updateTask(task: Task, state: IUploaderUI): IUploaderUI {
   const { tasks } = state;
-  console.log('updateTask: ', task.taskId, tasks);
   const targetIdx =  tasks.findIndex((item) => item.taskId === task.taskId);
 
   if (targetIdx === -1) {
@@ -62,7 +61,6 @@ function updateTask(task: Task, state: IUploaderUI): IUploaderUI {
   }
 
   tasks[targetIdx] = task2UITask(task);
-  console.log('updateTask: ', tasks);
   return {
     tasks: [...tasks],
   }

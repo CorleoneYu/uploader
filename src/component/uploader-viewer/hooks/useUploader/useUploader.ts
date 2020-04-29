@@ -13,7 +13,7 @@ export interface IUploader {
 /**
  * 处理 uploader 对应的 UI 数据
  */
-function useUploader() {
+function useUploader(afterFileChange: () => void) {
   const uploaderRef = useRef<Uploader>(getSingleUploader());
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -28,7 +28,10 @@ function useUploader() {
 
     // ui uploader
     dispatch(addTasks(tasks));
-  }, []);
+
+    // hooks
+    afterFileChange();
+  }, [afterFileChange]);
 
   const handleUpdateTask = useCallback((task: Task) => {
     dispatch(updateTask(task));

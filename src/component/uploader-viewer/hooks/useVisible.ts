@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 function useVisible() {
-  const [visible, setVisible] = useState<boolean>(true);
+  const [visible, setVisible] = useState<boolean>(false);
 
   return {
     visible,

@@ -3,6 +3,7 @@ import Chunk from './chunk';
 import SubTask, { ISubTaskProps } from './subTask';
 import { prepareApi, finishApi } from '../api/file';
 import { mockRequest } from './utils';
+
 export type FileStatus = 'init' | 'prepared' | 'sent' | 'uploaded' | 'error';
 
 let fileId = 1;
@@ -38,8 +39,14 @@ export default class FileUpload extends SubTask {
       return 0;
     }
 
-    const uploadedChunkSize = (this.uploadedChunkIdx + 1) * this.chunkSize;
-    const uploadingChunkSize = this.currentChunk.uploadedSize;
+    if (this.uploadedChunkIdx === this.chunkNum - 1) {
+      return this.file.size;
+    }
+
+    const uploadedChunkSize = this.uploadedChunkIdx * this.chunkSize;
+
+    const uploadingChunkSize = this.currentChunk ? this.currentChunk.uploadedSize : 0;
+    console.log('uploadedSize', uploadedChunkSize, uploadingChunkSize, uploadedChunkSize + uploadingChunkSize, this.file.size);
     return uploadedChunkSize + uploadingChunkSize;
   }
 
@@ -112,7 +119,7 @@ export default class FileUpload extends SubTask {
     this.chunks = chunks;
   }
 
-  private get currentChunk(): Chunk {
+  private get currentChunk(): Chunk | undefined {
     const { chunks, uploadedChunkIdx } = this;
     return chunks[uploadedChunkIdx+1];
   }
@@ -123,7 +130,10 @@ export default class FileUpload extends SubTask {
     try {
       // 发送chunk
       const currentChunk = this.currentChunk;
-      await currentChunk.send();
+      if(currentChunk) {
+        await currentChunk.send();
+      }
+
       this.uploadedChunkIdx++;
 
       if (this.uploadedChunkIdx === this.chunks.length - 1) {

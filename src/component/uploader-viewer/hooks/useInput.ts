@@ -4,7 +4,7 @@ import { useCallback, useRef } from 'react';
  * 提取 input 的创建
  * @param handleFileChange input 的 fileChange 事件回调
  */
-function useInput(handleFileChange: any) {
+function useInput(handleFileChange: (event: any) => void) {
   const inputDomRef = useRef<HTMLInputElement | null>(null);
   const inputBoxRef = useRef<HTMLDivElement | null>(null);
 

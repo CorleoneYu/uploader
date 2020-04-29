@@ -1,4 +1,5 @@
 import SubTask from './subTask';
+import { EVENTS, eventEmitter } from '../event';
 export type TaskStatus = 'paused' | 'uploading' | 'success';
 
 let taskId = 1;
@@ -65,6 +66,7 @@ export default class Task {
       // 判断是否已全部完成
       if (this.isFinish()) {
         this.taskStatus = 'success';
+        eventEmitter.emit(EVENTS.UPDATE_TASK, this);
         return;
       }
     }
