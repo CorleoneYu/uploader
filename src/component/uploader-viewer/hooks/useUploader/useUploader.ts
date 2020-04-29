@@ -48,6 +48,11 @@ function useUploader(afterFileChange: () => void) {
   useEffect(() => {
     eventEmitter.on(EVENTS.UPDATE_TASK, handleUpdateTask);
     eventEmitter.on(EVENTS.UPLOADED_FILE, handleUploadedFile);
+
+    return () => {
+      eventEmitter.off(EVENTS.UPDATE_TASK, handleUpdateTask);
+      eventEmitter.off(EVENTS.UPLOADED_FILE, handleUploadedFile);
+    }
   }, [handleUpdateTask, handleUploadedFile]);
 
   const uploader: IUploader = useMemo(() => {
