@@ -54,6 +54,26 @@ export function useFileMap() {
     return rootMap;
   }, []);
 
+  // 添加 文件夹/文件
+  const addNode = useCallback((node: IFileNodeMap) => {
+    setFileMap((fileMap) => {
+      const path = node.get('path');
+
+      // 1. 新增 key
+      let newFileMap = fileMap.set(node.get('key'), node);
+
+      // 2. 更新对应父节点的 childrenKey 字段
+      // path　即父节点 key
+      const parentKey = path;
+      let parentChildrenKey: string[] = fileMap.getIn([parentKey, 'childrenKey']);
+      parentChildrenKey.push(node.get('key'));
+      newFileMap = newFileMap.setIn([parentKey, 'childrenKey'], parentChildrenKey);
+
+      // 3. 更新 fileMap
+      return newFileMap;
+    });
+  }, []);
+
   // 删除文件(夹)
   const deleteFile = useCallback(
     async (fileNode: IFileNodeMap, path: string) => {
@@ -82,25 +102,8 @@ export function useFileMap() {
   // 新建文件夹
   const createFolder = useCallback(async (folderName: string, path: string) => {
     const data = await createFolderApi(folderName, path);
-
-    setFileMap((fileMap) => {
-      // 新文件夹 immutable
-      const newFolder = _createFileMap(data.data);
-
-      // 1. 新增 key
-      let newFileMap = fileMap.set(newFolder.get('key'), newFolder);
-
-      // 2. 更新对应父节点的 childrenKey 字段
-      // path　即父节点 key
-      const parentKey = path;
-      let parentChildrenKey: string[] = fileMap.getIn([parentKey, 'childrenKey']);
-      parentChildrenKey.push(newFolder.get('key'));
-      newFileMap = newFileMap.setIn([parentKey, 'childrenKey'], parentChildrenKey);
-
-      // 3. 更新 fileMap
-      return newFileMap;
-    });
-  }, []);
+    addNode(_createFileMap(data.data));
+  }, [addNode]);
 
   // 预览文件(夹)
   const previewNode = useCallback(
@@ -111,11 +114,10 @@ export function useFileMap() {
     [fileMap]
   );
 
-  // TODO: 上传文件 prepare 阶段
-
-  // TODO: 上传文件 sendChunks 阶段
-
-  // TODO: 上传文件 finish 阶段
+  // 上传文件 finish
+  const uploadedFile = useCallback((data: any) => {
+    addNode(_createFileMap(data));
+  }, [addNode]);
 
   return {
     fileMap,
@@ -123,6 +125,7 @@ export function useFileMap() {
     deleteFile,
     previewNode,
     createFolder,
+    uploadedFile,
   };
 }
 
@@ -177,7 +180,3 @@ function _createFileMap(fileNode: any): IFileNodeMap {
     isLeaf: fileNode.file,
   });
 }
-
-
-
-

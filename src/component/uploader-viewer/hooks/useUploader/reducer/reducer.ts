@@ -16,13 +16,13 @@ export interface IUploaderUI {
   tasks: ITaskUI[];
 }
 
-// const mockTask: ITaskUI = {
-//   taskId: 'task-1',
-//   name: 'test',
-//   size: 1054,
-//   uploadedSize: 256,
-//   status: 'uploading',
-// }
+const mockTask: ITaskUI = {
+  taskId: 'task-1',
+  name: 'test',
+  size: 1054,
+  uploadedSize: 256,
+  status: 'paused',
+}
 
 export const initialState: IUploaderUI = {
   tasks: [],

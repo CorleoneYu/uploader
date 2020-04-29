@@ -7,12 +7,12 @@ export default class Uploader {
     this.listenEvent();
   }
 
-  listenEvent() {
+  listenEvent = () => {
     eventEmitter.on(EVENTS.UI_PAUSE_TASK, this.handlePauseTask);
     eventEmitter.on(EVENTS.UI_START_TASK, this.handleStartTask);
   }
 
-  handlePauseTask(taskId: string) {
+  handlePauseTask = (taskId: string) => {
     console.log('handlePauseTask');
     const task = this.tasks.get(taskId);
     if (!task) {
@@ -20,24 +20,27 @@ export default class Uploader {
     }
 
     task.pause();
+    eventEmitter.emit(EVENTS.UPDATE_TASK, taskId);
   }
 
-  handleStartTask(taskId: string) {
+  handleStartTask = (taskId: string) => {
     console.log('handleStartTask');
     const task = this.tasks.get(taskId);
     if (!task) {
       return;
     }
 
-    task.upload();
+    task.upload(true);
+    eventEmitter.emit(EVENTS.UPDATE_TASK, taskId);
   }
-  addTask(tasks: Task[]) {
+
+  addTask = (tasks: Task[]) => {
     tasks.forEach(task => {
       this.tasks.set(task.taskId, task);
     })
   }
 
-  cancelTask(taskId: string) {
+  cancelTask = (taskId: string) => {
     if (!this.tasks.get(taskId)) {
       return;
     }
@@ -45,7 +48,7 @@ export default class Uploader {
     this.tasks.delete(taskId);
   }
 
-  upload(taskIds: string[]) {
+  upload = (taskIds: string[]) => {
     taskIds.forEach(taskId => {
       if (!this.tasks.get(taskId)) {
         return;

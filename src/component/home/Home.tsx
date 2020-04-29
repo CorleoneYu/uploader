@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import FolderTable from '../folder-table';
 import Preview from '../preview';
+import UploaderViewer from '../uploader-viewer';
 import useCurNodeKeyModel from '../../model/curNodeKey';
 import CreateFolderModal from '../create-folder';
 import useCurNodeModel from '../../model/curNode';
@@ -38,8 +39,8 @@ const Home = () => {
   const renderBtn = useCallback(() => {
     if (curNode && !curNode.get('isFile')) {
       return (
-        <div>
-          <Button type="primary">上传</Button>
+        <div className="btn-group">
+          <UploaderViewer />
           <Button style={{ marginLeft: 10 }} onClick={showModal}>
             新建
           </Button>

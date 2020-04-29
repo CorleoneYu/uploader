@@ -12,6 +12,10 @@ function Header(props: HeaderProps) {
   const { handleClose, uploader } = props;
 
   const renderStatus = useCallback(() => {
+    if (uploader.total === 0) {
+      return '暂无任务';
+    }
+
     switch (uploader.status) {
       case 'success':
         return '上传成功';

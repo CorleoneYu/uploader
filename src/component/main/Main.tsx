@@ -2,7 +2,6 @@ import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 
 /* component */
-import UploaderViewer from '../uploader-viewer';
 import Home from '../home';
 import FileTree from '../file-tree';
 import MainHeader from '../header';
@@ -32,9 +31,8 @@ function Main() {
             }}
           >
             <Switch>
-              <Route path="/main/upload" component={UploaderViewer} />
               <Route path="/main/home" render={() => <Home />} />
-              <Redirect from="*" to="/main/upload" />
+              <Redirect from="*" to="/main/home" />
             </Switch>
           </Content>
         </Layout>

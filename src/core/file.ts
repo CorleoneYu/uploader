@@ -3,6 +3,7 @@ import Chunk from './chunk';
 import SubTask, { ISubTaskProps } from './subTask';
 import { prepareApi, finishApi } from '../api/file';
 import { mockRequest } from './utils';
+import { eventEmitter, EVENTS } from '../event';
 
 export type FileStatus = 'init' | 'prepared' | 'sent' | 'uploaded' | 'error';
 
@@ -151,6 +152,7 @@ export default class FileUpload extends SubTask {
       // 若后台处理完毕 data 为 true
       if (res.data) {
         this.fileStatus = 'uploaded';
+        eventEmitter.emit(EVENTS.UPLOADED_FILE, res.data);
       } else {
         // 若未完成 则等待
         const TIMEOUT = 1000;

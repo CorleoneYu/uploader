@@ -38,12 +38,7 @@ export const ListBox = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    cursor: pointer;
     height: 56px;
-
-    &:hover {
-      background-color: #eff0f1;
-    }
 
     .task-info {
       display: flex;
@@ -71,9 +66,24 @@ export const ListBox = styled.div`
       }
     }
 
-    .task-progress {
-      font-size: 12px;
-      color: #8f959e;
+    .task-detail {
+      display: flex;
+      align-items: center;
+
+      .task-progress {
+        font-size: 12px;
+        color: #8f959e;
+      }
+
+      .operate-btn {
+        cursor: pointer;
+        margin-left: 10px;
+        padding: 0 5px;
+
+        &:hover {
+          background-color: #eff0f1;
+        }
+      }
     }
   }
 `;

@@ -13,6 +13,8 @@ export default class Task {
   // 在 task 层面才有 暂停、取消等状态
   public taskStatus: TaskStatus = 'paused';
   public currentIdx = 0;
+  // 是否正在执行 upload 方法
+  public _isLocked = false;
 
   public get name() {
     return this.root ? this.root.name : '';
@@ -51,6 +53,11 @@ export default class Task {
       return;
     }
 
+    if (this._isLocked) {
+      return;
+    }
+    this._isLocked = true;
+
     // 执行子任务
     // 从 task 层面看 子任务 taskItem 只有 upload、 isUploaded方法
     const taskItem = this.taskLink[this.currentIdx];
@@ -70,6 +77,8 @@ export default class Task {
         return;
       }
     }
+
+    this._isLocked = false;
 
     // 若未全部完成 则递归调用
     this.upload();

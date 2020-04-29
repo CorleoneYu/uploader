@@ -27,14 +27,16 @@ function UploaderViewer() {
   return (
     <div>
       <div className="inputBox" ref={inputBoxRef}>
-        <Button onClick={handleClick}>选择文件夹</Button>
+        <Button onClick={handleClick} type="primary">
+          上传
+        </Button>
         <Button onClick={cleanAllFile} type="danger" style={{ marginLeft: '20px' }}>
-          清除脏数据
+          清理
         </Button>
       </div>
       <UploaderViewerBox visible={visible}>
         <Header handleClose={handleClose} uploader={uploader} />
-        <Bar uploader={uploader} />
+        {uploader.total !== 0 && <Bar uploader={uploader} />}
         <List tasks={tasks} />
       </UploaderViewerBox>
     </div>

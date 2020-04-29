@@ -3,6 +3,8 @@ import { createFileTask, getSingleUploader, Uploader, Task, TaskStatus } from '.
 import { EVENTS, eventEmitter } from '../../../../event';
 import reducer, { initialState } from './reducer/reducer';
 import { addTasks, updateTask } from './reducer/action';
+import useCurNodeKeyModel from '../../../../model/curNodeKey';
+import useFileMapModel from '../../../../model/fileMap';
 
 export interface IUploader {
   total: number; // 总共的任务数量
@@ -14,11 +16,13 @@ export interface IUploader {
  * 处理 uploader 对应的 UI 数据
  */
 function useUploader(afterFileChange: () => void) {
+  const { uploadedFile } = useFileMapModel();
+  const { curNodeKey } = useCurNodeKeyModel();
   const uploaderRef = useRef<Uploader>(getSingleUploader());
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const handleFileChange = useCallback((event: any) => {
-    const tasks = createFileTask(event.target.files, '我的文件');
+    const tasks = createFileTask(event.target.files, curNodeKey);
     const taskIds = tasks.map((task) => task.taskId);
     const uploader = uploaderRef.current;
 
@@ -31,15 +35,20 @@ function useUploader(afterFileChange: () => void) {
 
     // hooks
     afterFileChange();
-  }, [afterFileChange]);
+  }, [afterFileChange, curNodeKey]);
 
   const handleUpdateTask = useCallback((task: Task) => {
     dispatch(updateTask(task));
   }, []);
 
+  const handleUploadedFile = useCallback((data: any) => {
+    uploadedFile(data);
+  }, [uploadedFile]);
+
   useEffect(() => {
     eventEmitter.on(EVENTS.UPDATE_TASK, handleUpdateTask);
-  }, [handleUpdateTask]);
+    eventEmitter.on(EVENTS.UPLOADED_FILE, handleUploadedFile);
+  }, [handleUpdateTask, handleUploadedFile]);
 
   const uploader: IUploader = useMemo(() => {
     const { tasks } = state;
