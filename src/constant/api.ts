@@ -1,23 +1,22 @@
-// export const apiPrefix = '/api';
-// export const userPrefix = `${apiPrefix}/user`;
+export const apiPrefix = 'http://120.77.208.81:8080';
 
 export const apiUrls = {
   user: {
-    signUp: '/signUp',
-    signIn: '/signIn',
+    signUp: apiPrefix + '/signUp',
+    signIn: apiPrefix + '/signIn',
   },
 
   file: {
-    getFileTree: '/fileTree',
-    prepare: '/prepare',
-    upload: '/upload',
-    finish: '/finish',
-    createFolder: '/createFolder',
-    delete: '/deleteFile', // 删除文件(夹)
-    remove: '/removeFile', // 移动文件(夹)
-    copy: '/copyFile',
-    share: '/share',
-    cleanAllFile: '/cleanAllFile',
+    getFileTree: apiPrefix +'/fileTree',
+    prepare: apiPrefix +'/prepare',
+    upload: apiPrefix + '/upload',
+    finish: apiPrefix +'/finish',
+    createFolder: apiPrefix +'/createFolder',
+    delete: apiPrefix + '/deleteFile', // 删除文件(夹)
+    remove: apiPrefix + '/removeFile', // 移动文件(夹)
+    copy: apiPrefix + '/copyFile',
+    share: apiPrefix + '/share',
+    cleanAllFile: apiPrefix + '/cleanAllFile',
   },
 };
 
