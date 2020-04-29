@@ -55,7 +55,7 @@ function addTasks(tasks: Task[], state: IUploaderUI): IUploaderUI {
 function updateTask(task: Task, state: IUploaderUI): IUploaderUI {
   const { tasks } = state;
   const targetIdx =  tasks.findIndex((item) => item.taskId === task.taskId);
-
+  
   if (targetIdx === -1) {
     return state;
   }

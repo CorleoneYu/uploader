@@ -18,10 +18,10 @@ export default class Chunk {
 
   public async send(): Promise<boolean> {
     const { uploadId, fileData, chunkIndex } = this;
+    eventEmitter.emit(EVENTS.UPDATE_TASK, this.fileUpload.task);
 
     try {
-      const res = await uploadApi(uploadId, chunkIndex, fileData, this.onProgress);
-      console.log('Chunk -> send -> res', res);
+      await uploadApi(uploadId, chunkIndex, fileData, this.onProgress);
       return true;
     } catch (err) {
       console.log('Chunk -> send -> err', err);

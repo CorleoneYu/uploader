@@ -1,8 +1,36 @@
 import { Task } from './index';
-
+import { EVENTS, eventEmitter } from '../event';
 export default class Uploader {
   public tasks: Map<string, Task> = new Map();
 
+  constructor() {
+    this.listenEvent();
+  }
+
+  listenEvent() {
+    eventEmitter.on(EVENTS.UI_PAUSE_TASK, this.handlePauseTask);
+    eventEmitter.on(EVENTS.UI_START_TASK, this.handleStartTask);
+  }
+
+  handlePauseTask(taskId: string) {
+    console.log('handlePauseTask');
+    const task = this.tasks.get(taskId);
+    if (!task) {
+      return;
+    }
+
+    task.pause();
+  }
+
+  handleStartTask(taskId: string) {
+    console.log('handleStartTask');
+    const task = this.tasks.get(taskId);
+    if (!task) {
+      return;
+    }
+
+    task.upload();
+  }
   addTask(tasks: Task[]) {
     tasks.forEach(task => {
       this.tasks.set(task.taskId, task);

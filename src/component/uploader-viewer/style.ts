@@ -38,7 +38,12 @@ export const ListBox = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    cursor: pointer;
     height: 56px;
+
+    &:hover {
+      background-color: #eff0f1;
+    }
 
     .task-info {
       display: flex;
@@ -50,9 +55,13 @@ export const ListBox = styled.div`
       }
 
       .task-desc {
+        width: 260px;
         margin-left: 10px;
 
         .task-name {
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
           font-size: 14px;
         }
 

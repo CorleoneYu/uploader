@@ -35,15 +35,11 @@ export default class FileUpload extends SubTask {
   }
 
   public get uploadedSize(): number {
-    if (this.uploadedChunkIdx === -1) {
-      return 0;
-    }
-
     if (this.uploadedChunkIdx === this.chunkNum - 1) {
       return this.file.size;
     }
 
-    const uploadedChunkSize = this.uploadedChunkIdx * this.chunkSize;
+    const uploadedChunkSize = (this.uploadedChunkIdx + 1) * this.chunkSize;
 
     const uploadingChunkSize = this.currentChunk ? this.currentChunk.uploadedSize : 0;
     console.log('uploadedSize', uploadedChunkSize, uploadingChunkSize, uploadedChunkSize + uploadingChunkSize, this.file.size);
@@ -74,8 +70,6 @@ export default class FileUpload extends SubTask {
     }
 
     if (this.fileStatus === 'sent') {
-      const TIMEOUT = 500;
-      await mockRequest(TIMEOUT);
       await this.finish();
       return;
     }
@@ -117,6 +111,7 @@ export default class FileUpload extends SubTask {
       chunks.push(chunk);
     }
     this.chunks = chunks;
+    console.log('createChunk: ', this.chunks);
   }
 
   private get currentChunk(): Chunk | undefined {
@@ -130,10 +125,11 @@ export default class FileUpload extends SubTask {
     try {
       // 发送chunk
       const currentChunk = this.currentChunk;
-      if(currentChunk) {
-        await currentChunk.send();
+      if(!currentChunk) {
+        return;
       }
 
+      await currentChunk.send();
       this.uploadedChunkIdx++;
 
       if (this.uploadedChunkIdx === this.chunks.length - 1) {
@@ -155,7 +151,11 @@ export default class FileUpload extends SubTask {
       // 若后台处理完毕 data 为 true
       if (res.data) {
         this.fileStatus = 'uploaded';
-      } 
+      } else {
+        // 若未完成 则等待
+        const TIMEOUT = 1000;
+        await mockRequest(TIMEOUT);
+      }
     } catch (e) {
       console.log('file finish err', e);
     }
