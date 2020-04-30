@@ -10,19 +10,21 @@ export interface ITaskUI {
   size: number;
   uploadedSize: number;
   status: TaskStatus;
+  progress: number;
 }
 
 export interface IUploaderUI {
   tasks: ITaskUI[];
 }
 
-const mockTask: ITaskUI = {
-  taskId: 'task-1',
-  name: 'test',
-  size: 1054,
-  uploadedSize: 256,
-  status: 'paused',
-}
+// const mockTask: ITaskUI = {
+//   taskId: 'task-1',
+//   name: 'test',
+//   size: 1054,
+//   uploadedSize: 256,
+//   status: 'paused',
+//   progress: 25,
+// };
 
 export const initialState: IUploaderUI = {
   tasks: [],
@@ -39,7 +41,7 @@ export default function reducer(state: IUploaderUI, action: IAction) {
 
     case ACTION_TYPE.UPDATE_TASK:
       return updateTask(action.payload.task, state);
-      
+
     default:
       return state;
   }
@@ -54,8 +56,8 @@ function addTasks(tasks: Task[], state: IUploaderUI): IUploaderUI {
 
 function updateTask(task: Task, state: IUploaderUI): IUploaderUI {
   const { tasks } = state;
-  const targetIdx =  tasks.findIndex((item) => item.taskId === task.taskId);
-  
+  const targetIdx = tasks.findIndex((item) => item.taskId === task.taskId);
+
   if (targetIdx === -1) {
     return state;
   }
@@ -63,5 +65,5 @@ function updateTask(task: Task, state: IUploaderUI): IUploaderUI {
   tasks[targetIdx] = task2UITask(task);
   return {
     tasks: [...tasks],
-  }
+  };
 }

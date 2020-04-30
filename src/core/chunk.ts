@@ -35,6 +35,12 @@ export default class Chunk {
   }
 
   onProgress = (event: ProgressEvent): void => {
+    // 当暂停后 重新开始时 event.loaded 会归 0
+    // 此时继续使用上一次的进度 避免用户看到进度回退
+    if (this.uploadedSize >= event.loaded) {
+      return;
+    }
+    
     this.uploadedSize = event.loaded;
     eventEmitter.emit(EVENTS.UPDATE_TASK, this.fileUpload.task);
   }

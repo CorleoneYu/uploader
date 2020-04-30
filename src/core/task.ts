@@ -29,6 +29,16 @@ export default class Task {
     return this.root ? this.root.uploadedSize : 0;
   }
 
+  public get progress() {
+    if (this.uploadedSize === this.size && !this.isFinish()) {
+      return 99.99;
+    }
+
+    // 保留两位小数
+    const progress = Math.round((this.uploadedSize / this.size) * 10000) / 100;
+    return progress;
+  }
+
   constructor(path: string) {
     this.taskId = `task-${taskId++}`;
     this.path = path;
