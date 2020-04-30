@@ -8,6 +8,7 @@ export default class Task {
   public taskId: string;
   public root: SubTask | null = null;
   public path: string = '';
+  // 从 task 层面看 子任务 taskItem 只有 upload、 isUploaded pause 方法
   public taskLink: SubTask[] = [];
   // todo 状态机 初始状态 paused
   // 在 task 层面才有 暂停、取消等状态
@@ -35,7 +36,12 @@ export default class Task {
 
   pause() {
     console.log('task pause');
-    this.taskStatus = 'paused';
+    this.taskStatus = 'paused'; 
+
+    // 暂停正在上传的 subTask
+    const taskItem = this.taskLink[this.currentIdx];
+    taskItem.pause();
+    eventEmitter.emit(EVENTS.UPDATE_TASK, this);
   }
 
   /**
@@ -46,6 +52,7 @@ export default class Task {
   async upload(isStart: boolean = false) {
     if (isStart) {
       this.taskStatus = 'uploading';
+      eventEmitter.emit(EVENTS.UPDATE_TASK, this);
     }
 
     // 当设置为暂停 退出递归调用
@@ -59,7 +66,6 @@ export default class Task {
     this._isLocked = true;
 
     // 执行子任务
-    // 从 task 层面看 子任务 taskItem 只有 upload、 isUploaded方法
     const taskItem = this.taskLink[this.currentIdx];
     await taskItem.upload();
 

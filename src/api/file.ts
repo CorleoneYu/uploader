@@ -1,5 +1,6 @@
 import { post, get } from './index';
 import { apiUrls } from '../constant/api';
+import { CancelTokenSource } from 'axios';
 
 export function getFileTreeApi() {
   return get(apiUrls.file.getFileTree, {});
@@ -13,7 +14,13 @@ export function prepareApi(fileName: string, fileSize: number, filePath: string)
   });
 }
 
-export function uploadApi(uploadId: number, chunkIndex: number, data: any, onProgress: any) {
+export function uploadApi(
+  uploadId: number,
+  chunkIndex: number,
+  data: any,
+  onProgress: any,
+  source: CancelTokenSource
+) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.addEventListener('loadend', () => {
@@ -25,6 +32,7 @@ export function uploadApi(uploadId: number, chunkIndex: number, data: any, onPro
       `${apiUrls.file.upload}?uploadId=${uploadId}&chunkIndex=${chunkIndex + 1}`,
       arrayBuffer as any,
       {
+        cancelToken: source.token,
         onUploadProgress: onProgress,
         headers: {
           'Content-Type': 'application/octet-stream',

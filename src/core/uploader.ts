@@ -20,7 +20,6 @@ export default class Uploader {
     }
 
     task.pause();
-    eventEmitter.emit(EVENTS.UPDATE_TASK, taskId);
   }
 
   handleStartTask = (taskId: string) => {
@@ -31,7 +30,6 @@ export default class Uploader {
     }
 
     task.upload(true);
-    eventEmitter.emit(EVENTS.UPDATE_TASK, taskId);
   }
 
   addTask = (tasks: Task[]) => {

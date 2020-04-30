@@ -65,4 +65,8 @@ export default class Directory extends SubTask{
       return file.uploadedSize;
     }, 0)
   }
+
+  public pause() {
+    console.log('dir pause');
+  }
 }

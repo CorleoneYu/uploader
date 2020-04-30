@@ -13,6 +13,7 @@ export interface IUploader {
 }
 
 /**
+ * TODO model 改造
  * 处理 uploader 对应的 UI 数据
  */
 function useUploader(afterFileChange: () => void) {
@@ -38,6 +39,7 @@ function useUploader(afterFileChange: () => void) {
   }, [afterFileChange, curNodeKey]);
 
   const handleUpdateTask = useCallback((task: Task) => {
+    console.log('handleUpdateTask', task);
     dispatch(updateTask(task));
   }, []);
 

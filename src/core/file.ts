@@ -43,7 +43,13 @@ export default class FileUpload extends SubTask {
     const uploadedChunkSize = (this.uploadedChunkIdx + 1) * this.chunkSize;
 
     const uploadingChunkSize = this.currentChunk ? this.currentChunk.uploadedSize : 0;
-    console.log('uploadedSize', uploadedChunkSize, uploadingChunkSize, uploadedChunkSize + uploadingChunkSize, this.file.size);
+    console.log(
+      'uploadedSize',
+      uploadedChunkSize,
+      uploadingChunkSize,
+      uploadedChunkSize + uploadingChunkSize,
+      this.file.size
+    );
     return uploadedChunkSize + uploadingChunkSize;
   }
 
@@ -117,7 +123,7 @@ export default class FileUpload extends SubTask {
 
   private get currentChunk(): Chunk | undefined {
     const { chunks, uploadedChunkIdx } = this;
-    return chunks[uploadedChunkIdx+1];
+    return chunks[uploadedChunkIdx + 1];
   }
 
   private async sendChunks() {
@@ -126,17 +132,19 @@ export default class FileUpload extends SubTask {
     try {
       // 发送chunk
       const currentChunk = this.currentChunk;
-      if(!currentChunk) {
+      if (!currentChunk) {
         return;
       }
 
       await currentChunk.send();
-      this.uploadedChunkIdx++;
 
-      if (this.uploadedChunkIdx === this.chunks.length - 1) {
-        this.fileStatus = 'sent';
+      if (currentChunk.isFinish) {
+        this.uploadedChunkIdx++;
+
+        if (this.uploadedChunkIdx === this.chunks.length - 1) {
+          this.fileStatus = 'sent';
+        }
       }
-      
     } catch (e) {
       console.log('file sendChunks err', e);
     }
@@ -169,5 +177,13 @@ export default class FileUpload extends SubTask {
 
   public isUploaded() {
     return this.fileStatus === 'uploaded';
+  }
+
+  public pause() {
+    const currentChunk = this.currentChunk;
+    if (!currentChunk) {
+      return;
+    }
+    currentChunk.abort();
   }
 }

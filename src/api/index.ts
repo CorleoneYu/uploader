@@ -86,6 +86,10 @@ myAxios.interceptors.response.use(
 type Params = {
   [key: string]: any;
 };
+
+// using the CancelToken.source factory
+export const cancelToken = axios.CancelToken;
+
 export const get = (url: string, params: Params, config = {}) =>
   myAxios.get(url, { ...config, params });
 export const deletes = (url: string, params: Params, config = {}) =>

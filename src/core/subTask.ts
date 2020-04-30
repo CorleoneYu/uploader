@@ -49,4 +49,7 @@ export default abstract class SubTask {
   public abstract isUploaded(): boolean;
 
   public abstract upload(): void;
+
+  // 暂停正在上传的 subTask
+  public abstract pause(): void;
 }
