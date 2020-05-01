@@ -66,6 +66,14 @@ export function deleteFileApi(fileName: string, path: string) {
 }
 
 /**
+ * 预览文件
+ * 返回文件预览链接
+ */
+export function previewFileApi(fileId: number) {
+  return get(apiUrls.file.previewUrl, { fileId });
+}
+
+/**
  * debugger 清除所有文件（包含脏数据）
  */
 export function cleanAllFile() {

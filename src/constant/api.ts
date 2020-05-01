@@ -17,6 +17,7 @@ export const apiUrls = {
     copy: apiPrefix + '/copyFile',
     share: apiPrefix + '/share',
     cleanAllFile: apiPrefix + '/cleanAllFile',
+    previewUrl: apiPrefix + '/preViewUrl',
   },
 };
 

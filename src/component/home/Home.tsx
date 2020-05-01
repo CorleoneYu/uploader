@@ -44,12 +44,13 @@ const Home = () => {
           <Button style={{ marginLeft: 10 }} onClick={showModal}>
             新建
           </Button>
+          <CreateFolderModal visible={modalVisible} hideModal={hideModal} />
         </div>
       );
     }
 
     return;
-  }, [curNode, showModal]);
+  }, [curNode, showModal, hideModal, modalVisible]);
 
   return (
     <div>
@@ -57,7 +58,6 @@ const Home = () => {
         <h2>路径：{curNodeKey ? curNodeKey : ''}</h2>
         {renderBtn()}
       </HomeHeader>
-      <CreateFolderModal visible={modalVisible} hideModal={hideModal} />
       {renderMain()}
     </div>
   );
