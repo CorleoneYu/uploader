@@ -57,6 +57,7 @@ export function usePreviewFile() {
     previewFile,
     setPreview,
     fetchPreviewFile,
+    curNode,
   };
 }
 

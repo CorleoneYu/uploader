@@ -74,6 +74,16 @@ export function previewFileApi(fileId: number) {
 }
 
 /**
+ * 下载文件
+ * 返回二进制文件
+ */
+export function downloadFileApi(fileId: number) {
+  return get(apiUrls.file.download, { fileId }, {
+    responseType: 'blob',
+  });
+}
+
+/**
  * debugger 清除所有文件（包含脏数据）
  */
 export function cleanAllFile() {

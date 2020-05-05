@@ -18,6 +18,7 @@ export const apiUrls = {
     share: apiPrefix + '/share',
     cleanAllFile: apiPrefix + '/cleanAllFile',
     previewUrl: apiPrefix + '/preViewUrl',
+    download: apiPrefix + '/download',
   },
 };
 
