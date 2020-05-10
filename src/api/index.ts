@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { message } from 'antd';
-import { HttpCode } from '../constant/api';
+import { HttpCode, apiUrls } from '../constant/api';
 import { getToken } from '../model/userInfo';
 import { history } from '../utils/history';
 
@@ -28,6 +28,12 @@ myAxios.interceptors.request.use(
 
 myAxios.interceptors.response.use(
   (response) => {
+    const url = response.config.url;
+    if (url === apiUrls.file.download) {
+      // 下载返回的是 二进制数据
+      return Promise.resolve(response);
+    }
+
     const res = response.data;
     const { code, msg } = res;
 
@@ -86,6 +92,8 @@ myAxios.interceptors.response.use(
 type Params = {
   [key: string]: any;
 };
+
+export default myAxios;
 
 // using the CancelToken.source factory
 export const cancelToken = axios.CancelToken;

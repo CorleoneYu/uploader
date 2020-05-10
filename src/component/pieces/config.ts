@@ -1,8 +1,9 @@
 import { drill, hirola, okapi } from './data';
 
-interface IPiece {
+export interface IPiece {
   polygon: string;
   fill: string;
+  transition: string;
 }
 
 export interface IConfig {

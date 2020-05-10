@@ -8,10 +8,6 @@ export const PiecesBox = styled.div`
     width: 960px;
     height: 730px;
     background: #a4c5ea;
-
-    > div {
-      transition: all 1.5s ease;
-    }
   }
 
   .btn-group {
@@ -27,6 +23,7 @@ export const PiecesBox = styled.div`
 interface IPieceStyle {
   polygon: string;
   fill: string;
+  transition: string;
 }
 export const Piece = styled.div`
   position: absolute;
@@ -34,4 +31,5 @@ export const Piece = styled.div`
   height: 100%;
   clip-path: ${(props: IPieceStyle) => props.polygon};
   background: ${(props: IPieceStyle) => props.fill};
+  transition: ${(props: IPieceStyle) => props.transition};
 `;

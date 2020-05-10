@@ -27,7 +27,7 @@ export default function Pieces() {
     <PiecesBox>
       <div className="container">
         {currentConfig.pieces.map((piece, index) => {
-          return <Piece key={index} polygon={piece.polygon} fill={piece.fill} />;
+          return <Piece key={index} polygon={piece.polygon} fill={piece.fill} transition={piece.transition} />;
         })}
         <div className="shadow" />
       </div>

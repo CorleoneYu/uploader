@@ -80,6 +80,7 @@ export function previewFileApi(fileId: number) {
 export function downloadFileApi(fileId: number) {
   return get(apiUrls.file.download, { fileId }, {
     responseType: 'blob',
+    headers: { Accept: "application/octet-stream" },
   });
 }
 

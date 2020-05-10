@@ -52,35 +52,34 @@ export default function Preview() {
   }, [previewFile]);
 
   // 下载文件
-  const handleDownload = useCallback(() => {
+  const handleDownload = useCallback(async () => {
     if (!curNode) {
       return;
     }
 
-    // try {
-    //   const res = await downloadFileApi(curNode.get('fileId'));
-    //   const blob = new Blob([res.data], {
-    //     // 下载的文件类型格式（二进制流，不知道下载文件类型可以设置为这个
-    //     // 具体请查看HTTP Content-type 对照表
-    //     type: 'application/octet-stream',
-    //   });
-    //   const url = URL.createObjectURL(blob);
-    //   const a = document.createElement('a');
-    //   a.style.display = 'none';
-    //   a.href = url;
-    //   a.setAttribute('download', curNode.get('fileName')); // 设置下载的文件名
-    //   document.body.appendChild(a);
+    try {
+      const res = await downloadFileApi(curNode.get('fileId'));
+      const blob = new Blob([res.data], {
+        // 下载的文件类型格式（二进制流，不知道下载文件类型可以设置为这个
+        // 具体请查看HTTP Content-type 对照表
+        type: 'application/octet-stream',
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = url;
+      a.setAttribute('download', curNode.get('fileName')); // 设置下载的文件名
+      document.body.appendChild(a);
 
-    //   a.click();
-    //   document.body.removeChild(a); //下载完成移除dom元素
-    //   URL.revokeObjectURL(url); //释放掉blob对象
-    // } catch (err) {
-    //   console.log('err', err);
-    // }
-    downloadFileApi(curNode.get('fileId'));
+      a.click();
+      document.body.removeChild(a); //下载完成移除dom元素
+      URL.revokeObjectURL(url); //释放掉blob对象
+    } catch (err) {
+      console.log('err', err);
+    }
   }, [curNode]);
 
-  if (!previewFile) {
+  if (!previewFile || !curNode) {
     return null;
   }
 
