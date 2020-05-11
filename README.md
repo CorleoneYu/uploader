@@ -1,44 +1,28 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Uploader
 
-## Available Scripts
+## Des
 
-In the project directory, you can run:
+本项目为一个网盘系统，大致支持用户上传文件、预览文件、下载文件。  
+线上地址：[欢迎体验](http://120.77.208.81/main/home)
 
-### `yarn start`
+## Feature
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Done
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+1. 支持文件断点上传，本质上是将文件分片进行传输。
+2. 新建文件夹
 
-### `yarn test`
+### Todo
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. 文件夹上传
+2. 错误处理
 
-### `yarn build`
+## Core
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+在设计上，实现了三个层次的抽象概念
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+1. uploader层，作为顶级对象层，包含 task 列表属性，单例。
+2. task 层，作为中级对象层 核心，包含 taskLint 列表属性，item 为 taskSubItem， 用来控制任务的暂停、开始、重试等。
+3. taskSubItem 层，作为底层对象，分为两类：file、dir 向上暴露 上传 接口，向下的话，file 需要封装与 chunk 的逻辑。
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+特殊的，在 file 上传过程中，需要实现 chunk, 也就是数据的上传。
