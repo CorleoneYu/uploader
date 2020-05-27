@@ -1,34 +1,8 @@
-import React, { useCallback } from 'react';
-import { Avatar, Menu, Dropdown } from 'antd';
+import React from 'react';
+import { Avatar, Dropdown } from 'antd';
 import { HeaderBox, AvatarBox } from './style';
+import AvatarMenu from './AvatarMenu'
 
-import { layout } from '../../model/userInfo';
-
-enum MENU_KEY {
-  SETTING = 'setting',
-  LAYOUT = 'layout',
-}
-const AvatarMenu = () => {
-  const handleClick = useCallback((e: any) => {
-    const { key } = e;
-    switch (key) {
-      case MENU_KEY.SETTING:
-        console.log('MENU_KEY.SETTING');
-        return;
-      case MENU_KEY.LAYOUT:
-        layout();
-        return;
-    }
-  }, []);
-
-  return (
-    <Menu onClick={handleClick}>
-      {/* <Menu.Item disabled>{userInfo.userName}</Menu.Item> */}
-      <Menu.Item key={MENU_KEY.SETTING}>设置</Menu.Item>
-      <Menu.Item key={MENU_KEY.LAYOUT}>退出登录</Menu.Item>
-    </Menu>
-  );
-};
 
 export default function Header() {
   return (
@@ -36,7 +10,7 @@ export default function Header() {
       <h1 style={{ color: '#fff' }}>易动网盘</h1>
       <AvatarBox>
         <Dropdown overlay={AvatarMenu()} placement="bottomCenter">
-          <Avatar>羽</Avatar>
+          <Avatar>盘</Avatar>
         </Dropdown>
       </AvatarBox>
     </HeaderBox>

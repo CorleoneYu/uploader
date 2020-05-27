@@ -4,6 +4,8 @@ export const apiUrls = {
   user: {
     signUp: apiPrefix + '/signUp',
     signIn: apiPrefix + '/signIn',
+    userInfo: apiPrefix + '/userInfo', // 获取用户信息
+    updatePwd: apiPrefix + '/updatePassword', // 修改密码
   },
 
   file: {

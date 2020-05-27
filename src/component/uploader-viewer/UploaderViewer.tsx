@@ -5,7 +5,7 @@ import useVisible from './hooks/useVisible';
 import Header from './Header';
 import List from './List';
 import Bar from './Bar';
-import { cleanAllFile } from '../../api/file';
+// import { cleanAllFile } from '../../api/file';
 import { UploaderViewerBox } from './style';
 /* antd */
 import { Button } from 'antd';
@@ -30,9 +30,9 @@ function UploaderViewer() {
         <Button onClick={handleClick} type="primary">
           上传
         </Button>
-        <Button onClick={cleanAllFile} type="danger" style={{ marginLeft: '20px' }}>
+        {/* <Button onClick={cleanAllFile} type="danger" style={{ marginLeft: '20px' }}>
           清理
-        </Button>
+        </Button> */}
       </div>
       <UploaderViewerBox visible={visible}>
         <Header handleClose={handleClose} uploader={uploader} />

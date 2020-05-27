@@ -39,6 +39,7 @@ export function usePreviewFile() {
     return fileTypeMap[type] || FILE_TYPE.UNKNOWN;
   }, []);
 
+  // 获取文件预览链接
   const fetchPreviewFile = useCallback(async () => {
     if (!curNode || !curNode.get('isFile') ) {
       return;

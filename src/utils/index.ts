@@ -1,23 +1,17 @@
-export function formatSize(bytes: number) {
-  // fix: 1024 返回空的 bug
-  var symbols = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-  var exp = Math.floor(Math.log(bytes) / Math.log(2));
-  if (exp < 1) {
-    exp = 0;
+/**
+ * 格式化文件大小, 输出成带单位的字符串
+ * @param {Number} size 文件大小
+ * @param {Number} [pointLength=2] 精确到的小数点数。
+ * @param {Array} [units=[ 'B', 'K', 'M', 'G', 'TB' ]] 单位数组。从字节，到千字节，一直往上指定。
+ *    如果单位数组里面只指定了到了K(千字节)，同时文件大小大于M, 此方法的输出将还是显示成多少K.
+ */
+export function formatSize(size: number, pointLength = 2, units = ['B', 'K', 'M', 'G', 'TB']) {
+  let unit;
+  while ((unit = units.shift()) && size >= 1024) {
+    size = size / 1024;
   }
-  var i = Math.floor(exp / 10);
-  bytes = bytes / Math.pow(2, 10 * i);
-
-  let str = '';
-  if (bytes.toString().length > bytes.toFixed(2).toString().length) {
-    str = bytes.toFixed(2);
-  }
-
-  if (!str) {
-    return '空';
-  }
-
-  return str + ' ' + symbols[i];
+  
+  return size.toFixed(pointLength) + unit;
 }
 
 export function formatTime(time: number): string {

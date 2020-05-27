@@ -44,6 +44,7 @@ const Home = () => {
           <Button style={{ marginLeft: 10 }} onClick={showModal}>
             新建
           </Button>
+          {/* 将 Modal 封装成方法调用 */}
           <CreateFolderModal visible={modalVisible} hideModal={hideModal} />
         </div>
       );

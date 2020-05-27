@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { createModel } from 'hox';
-import { signInApi, signUpApi } from '../api/user';
+import { signInApi, signUpApi, getUserInfo } from '../api/user';
 import { history } from '../utils/history';
 
 interface IUserInfo {
@@ -13,7 +13,7 @@ interface IUserInfo {
 
 const defaultUserInfo: IUserInfo = {
   account: '',
-  userName: '',
+  userName: '默认',
   usedCapacity: 0,
   storageCapacity: 0,
   token: '',
@@ -78,11 +78,27 @@ export function useUserInfo() {
     }
   }, []);
 
+  // 获取 更新用户信息
+  const updateUserInfo = useCallback(async () => {
+    const data = await getUserInfo();
+    const { account, userName, storageCapacity, usedCapacity } = data.data;
+    setUserInfo((userInfo) => {
+      return {
+        ...userInfo,
+        account,
+        userName,
+        storageCapacity,
+        usedCapacity,
+      };
+    });
+  }, []);
+
   return {
     userInfo,
     setUserInfo,
     signUp,
     signIn,
+    updateUserInfo
   };
 }
 

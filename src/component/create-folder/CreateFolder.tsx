@@ -5,6 +5,10 @@ import useFileMapModel from '../../model/fileMap';
 /* antd */
 import { Modal, Form, Input, message } from 'antd';
 
+/**
+ * TODO: 改造成 useUpdatePwdModal 的实现方式
+ * 并且还可以进一步抽象
+ */
 interface ICreateFolderProps {
   visible: boolean;
   hideModal: () => void;

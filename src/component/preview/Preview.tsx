@@ -3,7 +3,6 @@ import { Button, message } from 'antd';
 import usePreviewFileModel, { FILE_TYPE } from '../../model/preview';
 import useCurNodeModel from '../../model/curNode';
 import { PreviewBox } from './style';
-import { downloadFileApi } from '../../api/file';
 
 export default function Preview() {
   const { previewFile, fetchPreviewFile } = usePreviewFileModel();
@@ -15,17 +14,19 @@ export default function Preview() {
 
   // 点击复制链接
   const handleCopy = useCallback(() => {
-    if (!previewFile) {
+    if (!curNode) {
       return;
     }
 
+    // 直接拼成下载链接 黄总说做成分享的意向
+    const downloadUrl = `http://120.77.208.81:8080/download?fileId=${curNode.get('fileId')}`;
     const copyInput = document.createElement('input');
     copyInput.setAttribute('readonly', 'readonly');
-    copyInput.setAttribute('value', previewFile.previewUrl);
+    copyInput.setAttribute('value', downloadUrl);
 
     document.body.appendChild(copyInput);
     copyInput.select();
-    copyInput.setSelectionRange(0, previewFile.previewUrl.length);
+    copyInput.setSelectionRange(0, downloadUrl.length);
 
     if (document.execCommand('copy')) {
       document.execCommand('copy');
@@ -36,7 +37,7 @@ export default function Preview() {
       console.log('复制失败');
     }
     document.body.removeChild(copyInput);
-  }, [previewFile]);
+  }, [curNode]);
 
   const preview = useCallback(() => {
     if (!previewFile) {
@@ -79,7 +80,8 @@ export default function Preview() {
     // }
 
     // 直接打开新页面 请求资源
-    window.open(`http://120.77.208.81:8080/download?fileId=${curNode.get('fileId')}`, '_blank')
+    const downloadUrl = `http://120.77.208.81:8080/download?fileId=${curNode.get('fileId')}`;
+    window.open(downloadUrl, '_blank')
   }, [curNode]);
 
   if (!previewFile || !curNode) {
