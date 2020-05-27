@@ -29,6 +29,8 @@ myAxios.interceptors.request.use(
 myAxios.interceptors.response.use(
   (response) => {
     const url = response.config.url;
+    console.log('url: ', url);
+
     if (url === apiUrls.file.download) {
       // 下载返回的是 二进制数据
       return Promise.resolve(response);

@@ -16,7 +16,8 @@ interface IFileTypeMap {
 
 export const fileTypeMap: IFileTypeMap = {
   'png': FILE_TYPE.IMG,
-  'jpeg': FILE_TYPE.IMG, 
+  'jpeg': FILE_TYPE.IMG,
+  'jpg': FILE_TYPE.IMG,
 }
 
 export interface IPreviewFile {
