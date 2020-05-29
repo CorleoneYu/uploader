@@ -15,6 +15,7 @@ const UserInfo = () => {
     <p>容量: {formatSize(userInfo.usedCapacity)} / {formatSize(userInfo.storageCapacity)}</p>
   </div>
 }
+
 export default function showUserInfoModal() {
   Modal.confirm({
     title: '用户信息',

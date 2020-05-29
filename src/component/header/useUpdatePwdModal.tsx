@@ -1,11 +1,8 @@
 import React, { useCallback } from 'react';
-import { Modal, Form, Input, message } from 'antd';
+import { Form, Input, message } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { updatePwd } from '../../api/user';
-
-interface IFormProps {
-  form: FormInstance;
-}
+import useModalWithForm, { IFormProps } from '../../hooks/useModalWithForm'
 
 const UpdatePwdForm: React.FC<IFormProps> = (props) => {
   return (
@@ -21,9 +18,7 @@ const UpdatePwdForm: React.FC<IFormProps> = (props) => {
 };
 
 export default function useUpdatePwdModal() {
-  const [form] = Form.useForm();
-
-  const handleOk = useCallback(() => {
+  const handleOk = useCallback((form: FormInstance) => {
     return form
       .validateFields()
       .then((values) => {
@@ -38,20 +33,18 @@ export default function useUpdatePwdModal() {
         console.log('useUpdatePwdModal e', e);
         return Promise.reject();
       });
-  }, [form]);
+  }, []);
 
-  const handleCancel = useCallback(() => {
+  const handleCancel = useCallback((form: FormInstance) => {
     form.resetFields();
-  }, [form]);
+  }, []);
 
-  const showModal = () => {
-    Modal.confirm({
-      title: '修改密码',
-      content: <UpdatePwdForm form={form} />,
-      onOk: handleOk,
-      onCancel: handleCancel,
-    });
-  };
+  const { showModal } = useModalWithForm({
+    handleCancel,
+    handleOk,
+    title: '修改密码',
+    FormComponent: UpdatePwdForm
+  }) 
 
   return {
     showUpdatePwdModal: showModal,

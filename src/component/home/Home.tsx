@@ -1,9 +1,9 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import FolderTable from '../folder-table';
 import Preview from '../preview';
 import UploaderViewer from '../uploader-viewer';
 import useCurNodeKeyModel from '../../model/curNodeKey';
-import CreateFolderModal from '../create-folder';
+import useCreateFolderModal from '../create-folder';
 import useCurNodeModel from '../../model/curNode';
 
 /* antd */
@@ -13,16 +13,8 @@ import { HomeHeader } from './style';
 
 const Home = () => {
   const { curNodeKey } = useCurNodeKeyModel();
-  const [modalVisible, setModalVisible] = useState(false);
   const { curNode } = useCurNodeModel();
-
-  const showModal = useCallback(() => {
-    setModalVisible(true);
-  }, []);
-
-  const hideModal = useCallback(() => {
-    setModalVisible(false);
-  }, []);
+  const { showModal} = useCreateFolderModal();
 
   const renderMain = useCallback(() => {
     if (!curNode) {
@@ -44,14 +36,12 @@ const Home = () => {
           <Button style={{ marginLeft: 10 }} onClick={showModal}>
             新建
           </Button>
-          {/* 将 Modal 封装成方法调用 */}
-          <CreateFolderModal visible={modalVisible} hideModal={hideModal} />
         </div>
       );
     }
 
     return;
-  }, [curNode, showModal, hideModal, modalVisible]);
+  }, [curNode, showModal]);
 
   return (
     <div>

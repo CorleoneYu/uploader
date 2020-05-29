@@ -1,2 +1,2 @@
-import CreateFolder from './CreateFolder';
-export default CreateFolder;
+import useCreateFolderModal from './useCreateFolder';
+export default useCreateFolderModal;
